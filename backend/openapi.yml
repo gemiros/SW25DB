@@ -1,0 +1,578 @@
+openapi: 3.0.0
+x-stoplight:
+  id: gjim0dod6sd2d
+info:
+  title: SW25DB
+  version: '1.0'
+  contact:
+    name: gemiros
+  description: SW2.5の各種データに対するバックエンドAPI
+servers:
+  - url: 'http://localhost:3000'
+tags:
+  - name: monster
+paths:
+  /monsters:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - monster
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datas:
+                    type: array
+                    x-stoplight:
+                      id: lse5f2m1x65g5
+                    items:
+                      x-stoplight:
+                        id: kx9196cfrxmo2
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          x-stoplight:
+                            id: zgpqo1gndvfbr
+                        data:
+                          x-stoplight:
+                            id: h43t4ce402kcs
+                          anyOf:
+                            - $ref: '#/components/schemas/CommonMonster'
+                            - $ref: '#/components/schemas/RideMonster'
+                            - $ref: '#/components/schemas/GolemMonster'
+                            - $ref: '#/components/schemas/FamiliaMonster'
+      operationId: get-monsters
+      description: 全てのモンスターデータを取得する
+    post:
+      summary: ''
+      operationId: post-monsters
+      responses:
+        '200':
+          description: OK
+      tags:
+        - monster
+      description: モンスターデータの投稿
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  anyOf:
+                    - $ref: '#/components/schemas/CommonMonster'
+                    - $ref: '#/components/schemas/RideMonster'
+                    - $ref: '#/components/schemas/GolemMonster'
+                    - $ref: '#/components/schemas/FamiliaMonster'
+                  x-stoplight:
+                    id: v7knl941qvvd7
+    put:
+      summary: ''
+      operationId: put-monsters
+      responses:
+        '200':
+          description: OK
+      tags:
+        - monster
+      description: モンスターデータの修正
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  x-stoplight:
+                    id: ol7t072nuhlkx
+                data:
+                  x-stoplight:
+                    id: vzm3d33vtero6
+                  anyOf:
+                    - $ref: '#/components/schemas/CommonMonster'
+                    - $ref: '#/components/schemas/RideMonster'
+                    - $ref: '#/components/schemas/GolemMonster'
+                    - $ref: '#/components/schemas/FamiliaMonster'
+    delete:
+      summary: ''
+      operationId: delete-monsters
+      responses:
+        '200':
+          description: OK
+      tags:
+        - monster
+      description: モンスターデータの削除
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  x-stoplight:
+                    id: 4tv616kf8jfec
+components:
+  schemas:
+    CommonMonster:
+      title: CommonMonster
+      x-stoplight:
+        id: 5rykczom1ayrh
+      type: object
+      properties:
+        Top:
+          $ref: '#/components/schemas/MonsterTop'
+        Status:
+          $ref: '#/components/schemas/MonsterStatus'
+        Parts:
+          type: array
+          x-stoplight:
+            id: t9fgs72kz93ok
+          items:
+            $ref: '#/components/schemas/MonsterParts'
+        Abilitys:
+          type: array
+          x-stoplight:
+            id: syx7z26v9ey8o
+          items:
+            $ref: '#/components/schemas/MonsterAbility'
+        Bootys:
+          type: array
+          x-stoplight:
+            id: xn3b252wtnugv
+          items:
+            $ref: '#/components/schemas/MonsterBooty'
+        Explanation:
+          type: string
+          x-stoplight:
+            id: 6wf10yaj6od4n
+        Tags:
+          type: array
+          x-stoplight:
+            id: 3es1gupndjywi
+          items:
+            x-stoplight:
+              id: a0goq24seymiw
+            type: string
+    RideMonster:
+      title: CommonMonster
+      x-stoplight:
+        id: 6w41ozxr6oozf
+      type: object
+      properties:
+        Top:
+          $ref: '#/components/schemas/MonsterTop'
+        Status:
+          $ref: '#/components/schemas/RideStatus'
+        Parts:
+          type: array
+          x-stoplight:
+            id: ueiehc5sleb5p
+          items:
+            $ref: '#/components/schemas/RideParts'
+        Abilitys:
+          type: array
+          x-stoplight:
+            id: 3h4416p31sym5
+          items:
+            $ref: '#/components/schemas/MonsterAbility'
+        Explanation:
+          type: string
+          x-stoplight:
+            id: o9d20dryz2b60
+        Tags:
+          type: array
+          x-stoplight:
+            id: 183vlwpspnfvc
+          items:
+            x-stoplight:
+              id: 1nykz5xlmd225
+            type: string
+    GolemMonster:
+      title: CommonMonster
+      x-stoplight:
+        id: 8likahyzyzymj
+      type: object
+      properties:
+        Top:
+          $ref: '#/components/schemas/MonsterTop'
+        Status:
+          $ref: '#/components/schemas/MonsterStatus'
+        Parts:
+          type: array
+          x-stoplight:
+            id: 2cyizv1ux5c60
+          items:
+            $ref: '#/components/schemas/MonsterParts'
+        Abilitys:
+          $ref: '#/components/schemas/GolemAbilitys'
+        Bootys:
+          type: array
+          x-stoplight:
+            id: jb8yc1dek7ul1
+          items:
+            $ref: '#/components/schemas/MonsterBooty'
+        Explanation:
+          type: string
+          x-stoplight:
+            id: 2jh7q2vio0s81
+        Tags:
+          type: array
+          x-stoplight:
+            id: 0czv7wuq5zu7e
+          items:
+            x-stoplight:
+              id: k3u9mfked4yxv
+            type: string
+    FamiliaMonster:
+      title: CommonMonster
+      x-stoplight:
+        id: k0zn4qoq6zgnu
+      type: object
+      properties:
+        Top:
+          $ref: '#/components/schemas/MonsterTop'
+        Status:
+          $ref: '#/components/schemas/FamiliaStatus'
+        Parts:
+          type: array
+          x-stoplight:
+            id: 4idhf1jmme65x
+          items:
+            $ref: '#/components/schemas/MonsterParts'
+        Abilitys:
+          $ref: '#/components/schemas/GolemAbilitys'
+        Explanation:
+          type: string
+          x-stoplight:
+            id: cbxijntfy1sco
+        Tags:
+          type: array
+          x-stoplight:
+            id: dxz9uqpwpa5hg
+          items:
+            x-stoplight:
+              id: jowdkifmimthe
+            type: string
+    MonsterTop:
+      title: MonsterTop
+      x-stoplight:
+        id: f6u7jg1t7dwdq
+      type: object
+      properties:
+        race:
+          type: string
+          x-stoplight:
+            id: ui4oz4mbwmhpp
+        lv:
+          type: string
+          x-stoplight:
+            id: mtldgbk4qbywp
+        name:
+          type: string
+          x-stoplight:
+            id: 0n03a2kte141e
+    MonsterStatus:
+      title: MonsterStatus
+      x-stoplight:
+        id: dd8aed72gmkqp
+      type: object
+      properties:
+        int:
+          type: string
+          x-stoplight:
+            id: ulfm4pq6zmdap
+        perc:
+          type: string
+          x-stoplight:
+            id: xmv94cdoeddkv
+        reac:
+          type: string
+          x-stoplight:
+            id: 1gus1l73d8q01
+        imp:
+          type: string
+          x-stoplight:
+            id: qb36b3k2rqgfn
+        lang:
+          type: array
+          x-stoplight:
+            id: 2tnm5xk4pnbt5
+          items:
+            x-stoplight:
+              id: ca8ozjt461hu4
+            type: string
+        habi:
+          type: array
+          x-stoplight:
+            id: bowv51yoz0z31
+          items:
+            x-stoplight:
+              id: jgigxe87cbt5g
+            type: string
+        pop:
+          type: string
+          x-stoplight:
+            id: zb6zxbkakxiql
+        weakValue:
+          type: string
+          x-stoplight:
+            id: vaa0na3trlxf3
+        weak:
+          type: string
+          x-stoplight:
+            id: 4ghk3980sq7ur
+        preem:
+          type: string
+          x-stoplight:
+            id: mm4i6szp1gz7f
+        speed:
+          type: string
+          x-stoplight:
+            id: smsijjv7ql6cr
+        life:
+          type: string
+          x-stoplight:
+            id: 0ud6kffpam5en
+        mind:
+          type: string
+          x-stoplight:
+            id: bksjkbmndohuz
+    MonsterParts:
+      title: MonsterPart
+      x-stoplight:
+        id: ivlvm5srhnwt7
+      type: object
+      properties:
+        core:
+          type: boolean
+          x-stoplight:
+            id: 58xnu1tlozawg
+        name:
+          type: string
+          x-stoplight:
+            id: 8x433v48trtiu
+        hit:
+          type: string
+          x-stoplight:
+            id: 4904cuog6hz3c
+        damage:
+          type: string
+          x-stoplight:
+            id: cvkfpk7pht0pm
+        avoid:
+          type: string
+          x-stoplight:
+            id: nn70jka3axshe
+        protect:
+          type: string
+          x-stoplight:
+            id: t5g7sdlbmpcae
+        hp:
+          type: string
+          x-stoplight:
+            id: nftvu6ppd3t9g
+        mp:
+          type: string
+          x-stoplight:
+            id: q84kwol6jqfvy
+    MonsterBooty:
+      title: MonsterBooty
+      x-stoplight:
+        id: vzi1iltq23n9j
+      type: object
+      properties:
+        dice:
+          type: string
+          x-stoplight:
+            id: 21m2pyioqz8qv
+        item:
+          type: string
+          x-stoplight:
+            id: fpj7q3yf3kcmc
+    MonsterAbility:
+      title: MonsterAbility
+      x-stoplight:
+        id: lbehakvnwvdvl
+      type: object
+      properties:
+        kind:
+          type: array
+          x-stoplight:
+            id: 3a8enq4cie0cp
+          items:
+            x-stoplight:
+              id: mm19szy444aak
+            type: string
+        name:
+          type: string
+          x-stoplight:
+            id: aure7ngog5rcx
+        explain:
+          type: string
+          x-stoplight:
+            id: szq7ryzg6uv23
+    RideStatus:
+      title: MonsterStatus
+      x-stoplight:
+        id: guexz2qy6r0vu
+      type: object
+      properties:
+        value:
+          type: string
+          x-stoplight:
+            id: sq517yycwicbe
+        int:
+          type: string
+          x-stoplight:
+            id: a2uhwo3ibx1ep
+        lang:
+          type: array
+          x-stoplight:
+            id: rdrxa64rge1l7
+          items:
+            x-stoplight:
+              id: dmmjtn2o8ci5o
+            type: string
+        perc:
+          type: string
+          x-stoplight:
+            id: kxnrp0i3mrjtq
+        weak:
+          type: string
+          x-stoplight:
+            id: bwrk8a1dtoqxr
+        speed:
+          type: string
+          x-stoplight:
+            id: 42gt4tm1mrjac
+    RideParts:
+      title: MonsterPart
+      x-stoplight:
+        id: ay803e9oihpu5
+      type: object
+      properties:
+        lv:
+          type: string
+          x-stoplight:
+            id: gvdkk26z4ou5v
+        parts:
+          type: array
+          x-stoplight:
+            id: 2kkkuq3peu420
+          items:
+            $ref: '#/components/schemas/RidePart'
+    RidePart:
+      title: MonsterPart
+      x-stoplight:
+        id: 798gstelvq035
+      type: object
+      properties:
+        core:
+          type: boolean
+          x-stoplight:
+            id: xq180hdehaem8
+        name:
+          type: string
+          x-stoplight:
+            id: wxjavnx8i0r3u
+        hit:
+          type: string
+          x-stoplight:
+            id: x2t7ja7eieb38
+        damage:
+          type: string
+          x-stoplight:
+            id: vgcf1gk6x3stl
+        avoid:
+          type: string
+          x-stoplight:
+            id: 80huks3ma164a
+        protect:
+          type: string
+          x-stoplight:
+            id: s5tdobycge8dg
+        hp:
+          type: string
+          x-stoplight:
+            id: bvp6jyfjlhswn
+        mp:
+          type: string
+          x-stoplight:
+            id: 8muyjm93tsxqu
+        lifeRes:
+          type: string
+          x-stoplight:
+            id: tzy51hcu0ax7r
+        mindRes:
+          type: string
+          x-stoplight:
+            id: xansx9c32tkta
+    GolemAbilitys:
+      type: object
+      x-stoplight:
+        id: iboycui9ye79u
+      properties:
+        max:
+          type: string
+          x-stoplight:
+            id: 1vslv1kjxzslq
+        abilitys:
+          type: array
+          x-stoplight:
+            id: chf9633lqm5wb
+          items:
+            $ref: '#/components/schemas/GolemAbility'
+    GolemAbility:
+      title: MonsterAbility
+      x-stoplight:
+        id: pztp0b98vdra1
+      type: object
+      properties:
+        using:
+          type: boolean
+          x-stoplight:
+            id: l55iewr03e57q
+        item:
+          type: string
+          x-stoplight:
+            id: c3ne47jegxtip
+        kind:
+          type: array
+          x-stoplight:
+            id: 50kiqjvariyeh
+          items:
+            x-stoplight:
+              id: p0ueut77tik8g
+            type: string
+        name:
+          type: string
+          x-stoplight:
+            id: mspc0itl0p6ei
+        explain:
+          type: string
+          x-stoplight:
+            id: b095iq6ykrs03
+    FamiliaStatus:
+      title: MonsterStatus
+      x-stoplight:
+        id: sy462qif0cuk6
+      type: object
+      properties:
+        flv:
+          type: string
+          x-stoplight:
+            id: 09qrvhzl07hcm
+        preem:
+          type: string
+          x-stoplight:
+            id: viw42gv1re6vj
+        speed:
+          type: string
+          x-stoplight:
+            id: wgel5i3123wm4
