@@ -1,0 +1,93 @@
+GET http://localhost:5001/sw25datas/us-central1/getDatas
+
+###
+GET http://localhost:5001/sw25datas/us-central1/cacheClear
+
+###
+POST http://localhost:5001/sw25datas/us-central1/postData
+content-type: application/json
+
+{
+	"Status": {
+		"reac": "敵対的",
+		"mind": "4",
+		"imp": "0",
+		"speed": "8/-",
+		"int": "低い",
+		"life": "2",
+		"weak": "回復効果ダメージ+3点",
+		"pop": "6",
+		"habi": [
+			"遺跡"
+		],
+		"perc": "魔法",
+		"preem": "10",
+		"weakValue": "11",
+		"lang": [
+			"なし"
+		]
+	},
+	"Top": {
+		"race": "アンデッド",
+		"name": "テストモンスター2",
+		"lv": "1"
+	},
+	"Parts": [
+		{
+			"damage": "0",
+			"hit": "2",
+			"mp": "-",
+			"name": "武器",
+			"hp": "15",
+			"avoid": "2",
+			"protect": "3"
+		}
+	],
+	"Explanation": "死体の骨にマナが宿り、立ち上がったアンデッドです。全身は骨だけでできており、たいてい武器や盾、鎧で武装しています。\n古戦場や埋葬が浅い粗末な墓場、地下墓地などに現れ、近づくものを襲います。より強力なアンデッドに従い、群れをなして生者を襲うこともあります。",
+	"Abilitys": {
+		"abilitys": [
+			{
+				"explain": "",
+				"kind": [
+					"○"
+				],
+				"name": "精神効果無効"
+			}
+		]
+	},
+	"Bootys": [
+		{
+			"item": "なし",
+			"dice": "2~5"
+		}
+	],
+	"Tags": [
+		"main"
+	]
+}
+
+
+###
+GET http://localhost:5001/sw25datas/us-central1/createBundle
+content-type: application/json
+
+###
+GET http://localhost:5000/createBundle
+content-type: application/json
+
+###
+GET https://us-central1-sw25datas.cloudfunctions.net/createBundle
+
+###
+GET https://us-central1-sw25datas.cloudfunctions.net/getDatas2
+
+###
+GET https://us-central1-sw25datas.cloudfunctions.net/cacheClear
+
+###
+POST  https://us-central1-sw25datas.cloudfunctions.net/monsterDB
+content-type: application/json
+
+{
+  "type":"get"
+}
