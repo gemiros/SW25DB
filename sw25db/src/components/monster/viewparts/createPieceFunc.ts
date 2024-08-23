@@ -1,8 +1,8 @@
-import { key } from "localforage";
-
+import { race } from "../uniqueAbility/human";
 type Props = {
   monster: monster.monster;
   levelId: number;
+  hRace: race;
 };
 
 type createBool = {
@@ -56,8 +56,14 @@ function paramCreate(props: Props) {
   if (Status.life && Status.mind) {
     foundationText.data.params.push(
       ...[
-        createLabel("生命抵抗", Status.life.toString()),
-        createLabel("精神抵抗", Status.mind.toString()),
+        createLabel(
+          "生命抵抗",
+          (Status.life + props.hRace.fixPart.lifeRes!).toString()
+        ),
+        createLabel(
+          "精神抵抗",
+          (Status.mind + props.hRace.fixPart.mindRes!).toString()
+        ),
       ]
     );
   }
@@ -69,32 +75,70 @@ function paramCreate(props: Props) {
 }
 function partData(props: Props) {
   const parts = props.monster.Parts[props.levelId].parts;
-  updateFoundationTextStatus(parts);
+  updateFoundationTextStatus(parts, props.hRace);
 }
 function updateFoundationTextStatus(
-  parts: Array<monster.part> | Array<monster.part>
+  parts: Array<monster.part> | Array<monster.part>,
+  hRace: race
 ) {
   foundationText.data.status = [];
 
-  parts.forEach((part) => {
+  parts.forEach((part, id) => {
     let partName = part.name;
     if (parts.length == 1) {
       partName = "";
     }
-    foundationText.data.params.push(
-      ...[
-        createLabel(partName + "命中力", part.hit.toString()),
-        createLabel(partName + "打撃点", part.damage.toString()),
-        createLabel(partName + "回避力", part.avoid.toString()),
-        createLabel(partName + "防護点", part.protect.toString()),
-      ]
-    );
-    foundationText.data.status.push(
-      ...[
-        createLabel(partName + "HP", part.hp.toString(), part.hp.toString()),
-        createLabel(partName + "MP", part.mp.toString(), part.mp.toString()),
-      ]
-    );
+    if (id === 0) {
+      foundationText.data.params.push(
+        ...[
+          createLabel(
+            partName + "命中力",
+            (part.hit + hRace.fixPart.hit).toString()
+          ),
+          createLabel(
+            partName + "打撃点",
+            (part.damage + hRace.fixPart.damage).toString()
+          ),
+          createLabel(
+            partName + "回避力",
+            (part.avoid + hRace.fixPart.avoid).toString()
+          ),
+          createLabel(
+            partName + "防護点",
+            (part.protect + hRace.fixPart.protect).toString()
+          ),
+        ]
+      );
+      foundationText.data.status.push(
+        ...[
+          createLabel(
+            partName + "HP",
+            (part.hp + hRace.fixPart.hp).toString(),
+            (+hRace.fixPart.hp).toString()
+          ),
+          createLabel(
+            partName + "MP",
+            (Number(part.mp) + hRace.fixPart.mp).toString(),
+            (Number(part.mp) + hRace.fixPart.mp).toString()
+          ),
+        ]
+      );
+    } else {
+      foundationText.data.params.push(
+        ...[
+          createLabel(partName + "命中力", part.hit.toString()),
+          createLabel(partName + "打撃点", part.damage.toString()),
+          createLabel(partName + "回避力", part.avoid.toString()),
+          createLabel(partName + "防護点", part.protect.toString()),
+        ]
+      );
+      foundationText.data.status.push(
+        ...[
+          createLabel(partName + "HP", part.hp.toString(), part.hp.toString()),
+          createLabel(partName + "MP", part.mp.toString(), part.mp.toString()),
+        ]
+      );
+    }
   });
   if ("lifeRes" in parts[0]) {
     foundationText.data.params.push(
@@ -148,13 +192,34 @@ function commandCreate(props: Props, decision: number) {
       `＝＝＝＝＝部位判定（固定値）＝＝＝＝＝ \n` + partButtleCommandFixedText;
   }
   text += `\n＝＝＝＝＝特殊能力＝＝＝＝＝ \n`;
+  if (props.monster.Top.race === "人族") {
+    let unique: monster.ability[];
+    if (props.monster.Top.lv < 6) {
+      unique = props.hRace.raceUnique1!;
+    } else if (props.monster.Top.lv < 11) {
+      unique = props.hRace.raceUnique6!;
+    } else {
+      unique = props.hRace.raceUnique11!;
+    }
+    unique.forEach((ability) => {
+      if (ability.item != undefined && ability.item != "" && !ability.using) {
+        return;
+      }
+      let abilityText = "";
+      abilityText += ability.kind.join("");
+      abilityText += ability.name;
+      abilityText += ability.use ? ability.use : "";
+      abilityText += "|";
+      abilityText += ability.explain ? ability.explain : "";
+      abilityText += "\n";
+      text += abilityText;
+    });
+  }
   abilitys.forEach((ability) => {
     if (ability.item != undefined && ability.item != "" && !ability.using) {
       return;
     }
     let abilityText = "";
-    console.log(ability.use ? ability.use : "");
-
     abilityText += ability.kind.join("");
     abilityText += ability.name;
     abilityText += ability.use ? ability.use : "";
@@ -163,10 +228,27 @@ function commandCreate(props: Props, decision: number) {
     abilityText += "\n";
     text += abilityText;
   });
+  props.monster.Top.race === "人族"
+    ? (foundationText.data.memo = props.hRace.race)
+    : "";
   foundationText.data.commands = text;
 }
 
 export const create = async (props: Props, bool: createBool) => {
+  foundationText = {
+    kind: "character",
+    data: {
+      name: "",
+      memo: "",
+      status: [],
+      params: [],
+      active: true,
+      secret: true,
+      invisible: true,
+      hideStatus: true,
+      commands: "",
+    },
+  };
   paramCreate(props);
   partData(props);
   commandCreate(props, bool.decision + 1);

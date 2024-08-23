@@ -76,6 +76,7 @@ declare namespace monster {
     name: string;
     use?: string;
     explain?: string;
+    part?: string;
     using?: boolean;
     item?: string;
   }

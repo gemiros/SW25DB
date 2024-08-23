@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
 import { MonsterViewPartItem } from "./partItem"
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { race } from "../uniqueAbility/human";
 
 type Props = {
   parts: monster.level[]
   useLevelId: number
   setUseLevelId(id: number): void
-  core: string
-  setCore(core: string): void
+  core: string[]
+  setCore(core: string[]): void
+  hRace: race
 }
 
 export const MonsterViewParts = (props: Props) => {
@@ -16,9 +18,9 @@ export const MonsterViewParts = (props: Props) => {
     props.setUseLevelId(id);
   };
   useEffect(() => {
-    const coreArr = props.parts[props.useLevelId].parts.map((v) => { if (v.core) { return v.name } })
-    props.setCore(coreArr.join('、'))
-  }, [props, props.useLevelId])
+    const coreArr = props.parts[props.useLevelId].parts.filter(part => part.core).map(part => part.name)
+    props.setCore(coreArr)
+  }, [props.useLevelId])
   return (
     <React.Fragment>
       {'lv' in props.parts[0] ?
@@ -29,8 +31,8 @@ export const MonsterViewParts = (props: Props) => {
           </Select>
         </FormControl>
         : null}
-      <MonsterViewPartItem parts={props.parts[props.useLevelId].parts} />
-      コア部位：{props.core ? props.core : 'なし'}
+      <MonsterViewPartItem parts={props.parts[props.useLevelId].parts} hRace={props.hRace} />
+      コア部位：{props.core.length ? props.core.join("、") : 'なし'}
     </React.Fragment>
   )
 }

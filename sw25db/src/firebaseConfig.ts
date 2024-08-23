@@ -5,11 +5,9 @@ import {
   loadBundle,
   namedQuery,
 } from "firebase/firestore";
-// import * as admin from "firebase-admin";
 import firebase from "firebase/compat/app";
 
 const QUERY_NAME = "monsterDB_query";
-
 export const firebaseConfig = {
   projectId: "sw25datas",
 };

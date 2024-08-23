@@ -4,9 +4,11 @@ import MonsterView from './components/monster/Preview';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { loadFirestoreBundle } from './firebaseConfig';
 import { Container, Paper } from '@mui/material';
+import MonsterCreate from './components/monster/Create';
 
 // const baseUrl ='http://localhost:5001/sw25datas/us-central1/getDatas'
-const baseUrl = 'http://localhost:5000'
+// const baseUrl = 'http://localhost:5000'
+const baseUrl = 'https://sw25datas.web.app'
 
 export const monsterViewIndex = "/"
 export const monsterViewDetail = "/monster/view"
@@ -43,6 +45,8 @@ function App() {
               <Link to={monsterViewIndex}>一覧へ</Link>
               <Routes>
                 <Route path='/' element={<MonsterIndex monsters={monsters} setMonster={setMonsters} />} />
+                <Route path='/monster/create' element={<MonsterCreate />} />
+                <Route path='/monster/edit/:name' element={<MonsterCreate />} />
                 <Route path='/monster/view/:name' element={<MonsterView monsters={monsters} />} />
               </Routes>
             </Router>

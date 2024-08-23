@@ -1,10 +1,16 @@
-GET http://localhost:5001/sw25datas/us-central1/getDatas
+GET https://sw25datas.web.app/createBundle
+
+###
+GET https://us-central1-sw25datas.cloudfunctions.net/cachePurge
+
+###
+GET https://sw25datas.web.app/bundles
 
 ###
 GET http://localhost:5001/sw25datas/us-central1/cacheClear
 
 ###
-POST http://localhost:5001/sw25datas/us-central1/postData
+POST https://sw25datas.web.app/postData
 content-type: application/json
 
 {

@@ -1,8 +1,10 @@
 import React from "react"
 import { MonsterViewStatusParts } from "./statusParts"
+import { race } from "../uniqueAbility/human"
 
 type Props = {
   status: monster.status
+  hRace: race
 }
 export const MonsterViewStatus = (props: Props) => {
   const status = props.status
@@ -32,8 +34,8 @@ export const MonsterViewStatus = (props: Props) => {
         <MonsterViewStatusParts label="移動速度" data={status.speed} />
       </p>
       <p style={pStyle}>
-        <MonsterViewStatusParts label="生命抵抗力" data={status.life} data3={true} />
-        <MonsterViewStatusParts label="精神抵抗力" data={status.mind} data3={true} />
+        <MonsterViewStatusParts label="生命抵抗力" data={status.life} hRace={props.hRace.fixPart.lifeRes} data3={true} />
+        <MonsterViewStatusParts label="精神抵抗力" data={status.mind} hRace={props.hRace.fixPart.mindRes} data3={true} />
       </p>
     </h4>
   )
