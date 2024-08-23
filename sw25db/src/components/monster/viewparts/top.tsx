@@ -1,4 +1,3 @@
-import React, { useEffect } from "react"
 import { humanRace, race } from '../uniqueAbility/human';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 

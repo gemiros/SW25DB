@@ -1,6 +1,8 @@
-import { Container } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MyAccordion } from "./indexparts/accordion";
+import { useNavigate } from "react-router-dom";
+import { race } from "../const/monster";
 
 type RaceMonsType = {
   race: string,
@@ -13,10 +15,13 @@ type Props = {
   monsters: monster.monster[]
   setMonster: (mons: monster.monster[]) => void
 };
-const race = ["蛮族", "動物", "植物", "アンデッド", "魔法生物", "魔動機", "幻獣", "妖精", "魔神", "人族", "ゴーレム", "ファミリア", "騎獣"]
 
 export const MonsterIndex = (props: Props) => {
+  const navigate = useNavigate()
   const [raceMonsters, setRaceMonsters] = useState<RaceMonsType[]>([])
+  const createButtonListner = () => {
+    navigate('/monster/create')
+  }
   useEffect(() => {
     const sortMons = () => {
       setRaceMonsters([])
@@ -52,7 +57,10 @@ export const MonsterIndex = (props: Props) => {
 
   return (
     <div>
-      <h2>モンスター一覧</h2>
+      <div style={{ paddingBottom: "1em" }}>
+        <h2 style={{ marginBottom: "0" }}>モンスター一覧</h2>
+        <Button variant="contained" onClick={createButtonListner}>作成</Button>
+      </div>
       {raceMonsters.map((group, id) => (
         <MyAccordion key={id} monster={group} />
       ))}

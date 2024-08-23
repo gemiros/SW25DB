@@ -1,4 +1,3 @@
-import React from "react"
 import { MonsterViewStatusParts } from "./statusParts"
 import { race } from "../uniqueAbility/human"
 
@@ -8,7 +7,6 @@ type Props = {
 }
 export const MonsterViewStatus = (props: Props) => {
   const status = props.status
-  const aStyle = { marginRight: '1em' }
   const pStyle = { marginTop: '0em', marginBottom: '0em' }
   return (
     <h4>

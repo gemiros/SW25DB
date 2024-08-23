@@ -1,5 +1,5 @@
 import { styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { race } from "../uniqueAbility/human"
 
 type Props = {

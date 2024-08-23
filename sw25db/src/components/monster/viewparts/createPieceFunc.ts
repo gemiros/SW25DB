@@ -1,3 +1,4 @@
+import { foundationTextInit } from "../../const/monster";
 import { race } from "../uniqueAbility/human";
 type Props = {
   monster: monster.monster;
@@ -12,20 +13,7 @@ type createBool = {
   hide: boolean;
 };
 
-let foundationText: monster.foundation = {
-  kind: "character",
-  data: {
-    name: "",
-    memo: "",
-    status: [],
-    params: [],
-    active: true,
-    secret: true,
-    invisible: true,
-    hideStatus: true,
-    commands: "",
-  },
-};
+let foundationText: monster.foundation = foundationTextInit;
 const createLabel = (l: string, v: string, m?: any): monster.label => {
   let res: monster.label = {
     label: l,
@@ -235,20 +223,7 @@ function commandCreate(props: Props, decision: number) {
 }
 
 export const create = async (props: Props, bool: createBool) => {
-  foundationText = {
-    kind: "character",
-    data: {
-      name: "",
-      memo: "",
-      status: [],
-      params: [],
-      active: true,
-      secret: true,
-      invisible: true,
-      hideStatus: true,
-      commands: "",
-    },
-  };
+  foundationText = foundationTextInit;
   paramCreate(props);
   partData(props);
   commandCreate(props, bool.decision + 1);

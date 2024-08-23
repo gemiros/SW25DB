@@ -1,8 +1,6 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Typography } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import { AccordionParts } from "../indexparts/accordionParts"
-// import { MonsterViewAbilityItem } from "./abilityItem"
 
 type Props = {
   abilitys: monster.abilitys,
@@ -19,9 +17,6 @@ type PartAbility = {
 export const MonsterViewAbilitys = (props: Props) => {
   const [expanded, setExpanded] = useState(false)
   const [partAbilitys, setPartAbilitys] = useState<string[]>([])
-  const toggleAccordion = () => {
-    setExpanded(!expanded)
-  }
   useEffect(() => {
     const parts = ["全身"]
     parts.push(...props.abilitys.abilitys.map((obj) => obj.part ? obj.part : "全身"))
@@ -51,18 +46,7 @@ export const MonsterViewAbilitys = (props: Props) => {
           }
         </React.Fragment>)
       }
-      {/* {
-        props.abilitys.abilitys.map((item, id) =>
-          <MonsterViewAbilityItem key={id} abilitys={item} id={id} selectArray={props.selectArray} onChange={props.handleChange} />
-        )
-      } */}
     </div>
-  )
-}
-
-const PartAbilitys = (p: { abilitys: PartAbility, props: Props }) => {
-  return (
-    <></>
   )
 }
 
