@@ -75,7 +75,7 @@ const MonsterViewAbilityItem = (props: Props2) => {
   )
 }
 
-const UniqueAccordion = (unique: monster.ability) => {
+export const UniqueAccordion = (unique: monster.ability) => {
   const [expanded, setExpanded] = useState(false)
   const toggleAccordion = () => {
     setExpanded(!expanded)

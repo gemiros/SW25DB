@@ -34,22 +34,23 @@ declare namespace monster {
     subRace?: string;
     lv: number;
     name: string;
+    page: string;
   }
 
   interface status {
-    habi?: Array<string>;
-    imp?: string;
-    int?: string;
-    lang?: Array<string>;
-    life?: number;
-    mind?: number;
-    perc?: string;
-    pop?: number;
+    habi: Array<string>;
+    imp: number;
+    int: string;
+    lang: Array<string>;
+    life: number;
+    mind: number;
+    perc: string;
+    pop: number;
     preem?: number;
-    reac?: string;
-    speed?: string;
-    weak?: string;
-    weakValue?: string;
+    reac: string;
+    speed: string;
+    weak: string;
+    weakValue?: number;
     value?: string;
   }
 
@@ -76,7 +77,7 @@ declare namespace monster {
     name: string;
     use?: string;
     explain?: string;
-    part?: string;
+    part?: string[];
     using?: boolean;
     item?: string;
   }
@@ -89,5 +90,8 @@ declare namespace monster {
   interface booty {
     dice: string;
     item: string;
+    gamel: number;
+    cardKind?: string[];
+    cardRank?: string;
   }
 }
