@@ -10,9 +10,9 @@ import { CopyMonsterPiece } from './viewparts/copyPiece';
 import { humanRace, race } from './uniqueAbility/human';
 import { magicMonsterUnique } from './uniqueAbility/magicMonster';
 import { undeadUnique } from './uniqueAbility/undead';
-import { golemUnique } from './uniqueAbility/golem';
+import { golemUnique, golemUniqueStatus } from './uniqueAbility/golem';
 import { ancientFairyUnique, commonFairyUnique } from './uniqueAbility/fairy';
-import { familia2Unique, familiaUnique } from './uniqueAbility/familia';
+import { familia2Unique, familiaUnique, familiaUniqueStatus1, familiaUniqueStatus2 } from './uniqueAbility/familia';
 
 type Props = {
   monsters: monster.monster[]
@@ -25,6 +25,7 @@ const MonsterView = (props: Props) => {
   const [selectArray, setSelectArray] = useState<string[]>([])
   const [unique, setUnique] = useState<monster.ability[] | null>(null)
   const [hRace, setHRace] = useState<race>(humanRace[0])
+  const [fixedStatus, setFixedStatus] = useState<monster.fixedStatus>({})
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value);
 
@@ -51,8 +52,10 @@ const MonsterView = (props: Props) => {
 
   useEffect(() => {
     setUnique(null)
+    setFixedStatus({})
     switch (mons?.Top.race) {
       case "人族":
+        setFixedStatus({ perc: hRace.fixPerc ?? undefined })
         if (mons.Top.lv < 6) {
           setUnique(hRace?.raceUnique1 ? hRace.raceUnique1 : null)
         } else if (mons.Top.lv < 11) {
@@ -71,6 +74,7 @@ const MonsterView = (props: Props) => {
         setUnique(undeadUnique)
         break;
       case "ゴーレム":
+        setFixedStatus(golemUniqueStatus)
         setUnique(golemUnique)
         break;
       case "妖精":
@@ -82,11 +86,20 @@ const MonsterView = (props: Props) => {
         break;
       case "ファミリア":
         if (mons.Top.lv >= 7) {
+          setFixedStatus(familiaUniqueStatus1)
           setUnique(familia2Unique)
         } else {
+          setFixedStatus(familiaUniqueStatus2)
           setUnique(familiaUnique)
         }
         break;
+      case '騎獣':
+        if (mons.Top.subRace) {
+          if (mons.Top.subRace == '魔動機') {
+            setUnique(magicMonsterUnique)
+          }
+        }
+        break
       default:
         break;
     }
@@ -98,7 +111,7 @@ const MonsterView = (props: Props) => {
         <React.Fragment>
           <CopyMonsterPiece monster={mons} levelId={useLevelId} hRace={hRace} />
           <MonsterViewTop top={mons.Top} hRace={hRace} setHRace={setHRace} />
-          <MonsterViewStatus status={mons.Status} hRace={hRace} />
+          <MonsterViewStatus fixedStatus={fixedStatus} status={mons.Status} hRace={hRace} top={mons.Top} />
           <MonsterViewParts parts={mons.Parts} useLevelId={useLevelId} setUseLevelId={setUseLevelId} core={core} setCore={setCore} hRace={hRace} />
           <hr />
           <h2>特殊能力 {mons.Abilitys.max ? <>最大値={mons.Abilitys.max}</> : null}</h2>

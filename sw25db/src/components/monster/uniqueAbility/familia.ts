@@ -1,3 +1,19 @@
+export const familiaUniqueStatus1: monster.fixedStatus = {
+  habi: ["さまざま"],
+  int: "なし",
+  lang: ["なし"],
+  perc: "術者と共有",
+  pop: 8,
+  reac: "命令による",
+};
+export const familiaUniqueStatus2: monster.fixedStatus = {
+  habi: ["さまざま"],
+  int: "人間並み",
+  lang: ["魔法文明語"],
+  perc: "術者と共有",
+  pop: 12,
+  reac: "命令による",
+};
 export const familiaUnique: monster.ability[] = [
   {
     name: "毒・病気・精神効果属性無効",

@@ -54,6 +54,23 @@ declare namespace monster {
     value?: string;
   }
 
+  interface fixedStatus {
+    habi?: Array<string>;
+    imp?: number;
+    int?: string;
+    lang?: Array<string>;
+    life?: number;
+    mind?: number;
+    perc?: string;
+    pop?: number;
+    preem?: number;
+    reac?: string;
+    speed?: string;
+    weak?: string;
+    weakValue?: number;
+    value?: string;
+  }
+
   interface part {
     core: boolean;
     name: string;

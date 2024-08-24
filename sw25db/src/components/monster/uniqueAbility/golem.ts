@@ -1,3 +1,10 @@
+export const golemUniqueStatus: monster.fixedStatus = {
+  int: "命令を聞く",
+  perc: "魔法",
+  reac: "命令による",
+  lang: ["なし"],
+  habi: ["さまざま"],
+};
 export const golemUnique: monster.ability[] = [
   {
     name: "毒・病気・精神効果属性無効",
