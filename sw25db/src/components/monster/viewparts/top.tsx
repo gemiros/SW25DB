@@ -13,7 +13,9 @@ export const MonsterViewTop = (props: Props) => {
   };
   return (
     <h2>
-      分類:{props.top.race} Lv.{props.top.lv} {props.top.name}{props.top.subRace ? `(${props.top.subRace})` : null}<br />
+      <div>
+        分類:{props.top.race} Lv.{props.top.lv} {props.top.name}{props.top.subRace ? `(${props.top.subRace})` : null} {props.top.page ? props.top.page : null}
+      </div>
       {props.top.race === "人族" ? <FormControl>
         <InputLabel>種族</InputLabel>
         <Select style={{ width: '10em' }} label="レベル" onChange={handleChange} value={props.hRace?.raceId.toString()}>

@@ -9,17 +9,14 @@ type Props = {
   handleChange(e: React.ChangeEvent<HTMLInputElement>): void
 }
 
-type PartAbility = {
-  part: string
-  abilitys: monster.ability[]
-}
-
 export const MonsterViewAbilitys = (props: Props) => {
   const [expanded, setExpanded] = useState(false)
   const [partAbilitys, setPartAbilitys] = useState<string[]>([])
   useEffect(() => {
     const parts = ["全身"]
-    parts.push(...props.abilitys.abilitys.map((obj) => obj.part ? obj.part : "全身"))
+    props.abilitys.abilitys ? props.abilitys.abilitys.forEach((ability) => {
+      ability.part ? parts.push(...ability.part) : null
+    }) : null
     setPartAbilitys(Array.from(new Set(parts)))
   }, [props])
 
@@ -38,12 +35,23 @@ export const MonsterViewAbilitys = (props: Props) => {
       }
       {
         partAbilitys.map((part, id) => <React.Fragment key={id}>
+          {partAbilitys.length > 1 ? <h3>{part}</h3> : null}
           {
-            props.abilitys.abilitys.filter((abi) => !abi.part || part == "全身").map((item, ids) => <MonsterViewAbilityItem key={ids} abilitys={item} id={ids} selectArray={props.selectArray} onChange={props.handleChange} />)
+            part === '全身' ?
+              props.abilitys.abilitys ?
+                props.abilitys.abilitys
+                  .filter((abi) => !abi.part)
+                  .map((abi, id) => <MonsterViewAbilityItem key={id} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)
+                : null
+              : props.abilitys.abilitys ?
+                props.abilitys.abilitys
+                  .filter((abi) => abi.part ?
+                    abi.part.includes(part)
+                    : false)
+                  .map((abi, id) => <MonsterViewAbilityItem key={id} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)
+                : null
           }
-          {
-            props.abilitys.abilitys.filter((abi) => abi.part == part).map((item, ids) => <MonsterViewAbilityItem key={ids} abilitys={item} id={ids} selectArray={props.selectArray} onChange={props.handleChange} />)
-          }
+
         </React.Fragment>)
       }
     </div>
