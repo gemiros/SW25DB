@@ -6,10 +6,6 @@ import { loadFirestoreBundle } from './firebaseConfig';
 import { Container, Paper } from '@mui/material';
 import MonsterCreate from './components/monster/Create';
 
-// const baseUrl ='http://localhost:5001/sw25datas/us-central1/getDatas'
-// const baseUrl = 'http://localhost:5000'
-const baseUrl = 'https://sw25datas.web.app'
-
 export const monsterViewIndex = "/"
 export const monsterViewDetail = "/monster/view"
 
@@ -19,7 +15,7 @@ function App() {
   useEffect(() => {
     const fetchMonsters = async () => {
       try {
-        const bundleData = await loadFirestoreBundle(baseUrl)
+        const bundleData = await loadFirestoreBundle()
         await setMonsters(bundleData)
       } catch (error) {
         console.error('Error fetching monsters:', error);

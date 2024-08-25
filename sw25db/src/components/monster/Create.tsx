@@ -8,8 +8,9 @@ import { Explanation } from './createparts/explanation';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, Typography } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { abilitysInit, statusInit, tooInit } from '../const/monster';
+import { postData } from '../../firebaseConfig';
 
-const MonsterCreate: React.FC = () => {
+const MonsterCreate = () => {
   const [top, setTop] = useState<monster.top>(structuredClone(tooInit))
   const [tags, setTags] = useState<string[]>([])
   const [status, setStatus] = useState<monster.status>(structuredClone(statusInit))
@@ -23,7 +24,7 @@ const MonsterCreate: React.FC = () => {
   const toggleStatusAccordion = () => {
     setStatusExpanded(!statusExpanded);
   };
-  const createMonster = () => {
+  const createMonster = async () => {
     const data: monster.monster = {
       id: '',
       Top: top,
@@ -34,7 +35,7 @@ const MonsterCreate: React.FC = () => {
       Tags: tags
     }
     console.log(data);
-
+    await postData(data)
   }
   useEffect(() => {
     const tmp = structuredClone(levels)
@@ -55,10 +56,10 @@ const MonsterCreate: React.FC = () => {
         ><Typography variant="h6">ステータス</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Status status={status} setStatus={setStatus} />
+          <Status race={top.race} status={status} setStatus={setStatus} />
         </AccordionDetails>
       </Accordion>
-      <Parts levels={levels} setLevels={setLevels} />
+      <Parts levels={levels} setLevels={setLevels} race={top.race} lv={top.lv} />
       <Abilitys partNameList={partNameList} top={top} abilitys={abilitys} setAbilitys={setAbilitys} />
       <Bootys bootys={bootys} setBootys={setBootys} />
       <Explanation explanation={explanation} setExplanation={setExplanation} />

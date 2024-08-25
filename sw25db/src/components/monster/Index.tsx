@@ -2,7 +2,7 @@ import { Button, Container, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MyAccordion } from "./indexparts/accordion";
 import { useNavigate } from "react-router-dom";
-import { race } from "../const/monster";
+import { raceList } from "../const/monster";
 
 type RaceMonsType = {
   race: string,
@@ -19,29 +19,42 @@ type Props = {
 export const MonsterIndex = (props: Props) => {
   const navigate = useNavigate()
   const [raceMonsters, setRaceMonsters] = useState<RaceMonsType[]>([])
+  const [sortMons, setSortMons] = useState<monster.monster[]>([])
   const createButtonListner = () => {
     navigate('/monster/create')
   }
   useEffect(() => {
     const sortMons = () => {
       setRaceMonsters([])
-      let sortedMons = props.monsters
-        .sort((a, b) => a.Top.name.localeCompare(b.Top.name))
-        .sort((a, b) => a.Top.lv - b.Top.lv)
-      props.setMonster(sortedMons)
+      console.log(props.monsters);
+      let sortedMons = props.monsters.filter((data) => data.Top)
+      console.log(sortedMons);
+      console.log(props.monsters.filter((data) => !data.Top));
 
+      try {
+        sortedMons = props.monsters
+          .sort((a, b) => { return a.Top.name.localeCompare(b.Top.name) })
+          .sort((a, b) => a.Top.lv - b.Top.lv)
+        props.setMonster(sortedMons)
+      } catch (error) {
+        console.log(error);
+      }
+      setSortMons(sortedMons)
     }
+    sortMons()
+  }, [props.monsters])
+
+  useEffect(() => {
     const classing = () => {
       let newRaceMonss: RaceMonsType[] = [];
-      sortMons()
-      race.forEach(r => {
+      raceList.forEach(r => {
         let rm: RaceMonsType = {
           race: r,
           main: [],
           boss: [],
           origin: []
         }
-        props.monsters.forEach(monster => {
+        sortMons.forEach(monster => {
           if (r == monster.Top.race) {
             if (monster.Tags.find(item => item === 'main')) rm.main.push(monster);
             if (monster.Tags.find(item => item === 'boss')) rm.boss.push(monster);
@@ -53,7 +66,7 @@ export const MonsterIndex = (props: Props) => {
       setRaceMonsters(newRaceMonss)
     }
     classing();
-  }, [props.monsters])
+  }, [sortMons])
 
   return (
     <div>

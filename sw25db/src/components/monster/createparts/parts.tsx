@@ -1,36 +1,79 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { PartsProps } from "./props"
 import CachedIcon from '@mui/icons-material/Cached';
-import { Button, Table, TableBody } from "@mui/material";
-import { levelInit, partInit } from "../../const/monster";
+import { Button, styled, Table, TableBody, TableCell, tableCellClasses, TableRow } from "@mui/material";
+import { levelInit, partInit, raceList } from "../../const/monster";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { PartItem } from "./partItem";
+import { handleChange } from "../../utilFunc/utilFunc";
+import { StatusInput } from "./foundationStatus";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    textAlign: 'center',
+    border: '1px #aaaaaa solid'
+  },
+}));
 
 export const Parts = (props: PartsProps) => {
-  const { levels, setLevels } = props
-  // const [levels, setLevels] = useState<monster.level[]>([])
+  const { levels, setLevels, race, lv } = props
   const [cores, setCores] = useState<string[]>([])
-  const partsPlus = () => {
+  const lvPlus = () => {
+    const tmpLevels: monster.level[] = structuredClone(levels)
+    tmpLevels.length == 0 ?
+      tmpLevels.push({
+        lv: lv + levels.length,
+        parts: [structuredClone(partInit)]
+      })
+      :
+      tmpLevels.push({
+        lv: lv + levels.length,
+        parts: structuredClone(levels[0].parts)
+      })
+    setLevels(tmpLevels)
+  }
+  const lvMinus = () => {
     if (levels.length !== 0) {
       const tmpLevels = structuredClone(levels)
-      tmpLevels.forEach((level, id) => {
-        const tmpLevel = structuredClone(level)
-        tmpLevel.parts.push(structuredClone(partInit))
-        tmpLevels[id] = tmpLevel
-      });
+      tmpLevels.pop()
       setLevels(tmpLevels)
+    }
+  }
+  const partsPlus = () => {
+    if (race === '騎獣') {
+      if (levels.length == 0) {
+        lvPlus()
+      } else {
+        const tmp = structuredClone(levels)
+        tmp.forEach(tmpLevel => {
+          tmpLevel.parts.push(structuredClone(partInit))
+        });
+        setLevels(tmp)
+      }
     } else {
-      const tmpLevel: monster.level[] = [structuredClone(levelInit)]
-      tmpLevel[0].parts.push(structuredClone(partInit))
-      setLevels(tmpLevel)
+      if (levels.length !== 0) {
+        const tmpLevels = structuredClone(levels)
+        tmpLevels.forEach((level, id) => {
+          const tmpLevel = structuredClone(level)
+          tmpLevel.parts.push(structuredClone(partInit))
+          tmpLevels[id] = tmpLevel
+        });
+        setLevels(tmpLevels)
+      } else {
+        const tmpLevel: monster.level[] = [structuredClone(levelInit)]
+        tmpLevel[0].parts.push(structuredClone(partInit))
+        setLevels(tmpLevel)
+      }
     }
   }
   const partsMinus = () => {
-    if (levels.length !== 0) {
-      const tmpLevels = structuredClone(levels)
-      tmpLevels[0].parts.pop()
-      setLevels(tmpLevels)
-    }
+    let tmp = structuredClone(levels)
+    tmp.forEach((levels) => {
+      levels.parts.pop()
+    });
+    tmp = tmp.filter((t) => t.parts.length)
+    setLevels(tmp)
   }
   const allClear = () => {
     setLevels([])
@@ -45,14 +88,29 @@ export const Parts = (props: PartsProps) => {
     }
   }, [levels])
   return <div style={{ marginTop: '1em' }}>
+    {race === '騎獣' ? <>
+      <Button variant="contained" style={{ marginBottom: '1em' }} onClick={lvPlus}>Lv追加<AddCircle /></Button>
+      <Button variant="contained" style={{ marginBottom: '1em' }} onClick={lvMinus}>Lv削除<RemoveCircle /></Button>
+    </> : null}
     <Button variant="contained" style={{ marginBottom: '1em' }} onClick={partsPlus}>部位追加<AddCircle /></Button>
     <Button variant="contained" style={{ marginBottom: '1em' }} onClick={partsMinus}>部位削除<RemoveCircle /></Button>
     <Button variant="contained" style={{ marginBottom: '1em' }} onClick={allClear}>クリア<CachedIcon /></Button>
-    <Table>
-      <TableBody>
-        {levels.length ? levels[0].parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} />) : null}
-      </TableBody>
-    </Table>
+    {race === '騎獣' ?
+      <Table>
+        <TableBody>
+          {levels.length ? levels.map((level, id) => <React.Fragment key={id}>
+            <TableRow>
+              <StyledTableCell style={{ padding: '0', height: 'auto' }}>Lv.{level.lv}</StyledTableCell>
+            </TableRow>
+            {level.parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} />)}
+          </React.Fragment>) : null}
+        </TableBody>
+      </Table> :
+      <Table>
+        <TableBody>
+          {levels.length ? levels[0].parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} />) : null}
+        </TableBody>
+      </Table>}
     コア部位：{cores.length ? cores.join('、') : 'なし'}
   </div>
 }

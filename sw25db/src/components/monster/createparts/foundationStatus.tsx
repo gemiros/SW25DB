@@ -22,14 +22,16 @@ export const FoudationStatus = (props: Props) => {
 type Props2 = {
   inputName: string
   value: number | string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   style?: React.CSSProperties | undefined
   endAdornment?: null
+  readonly?: boolean
 }
 
 export const StatusInput = (props: Props2) => {
   const { inputName, value, onChange, style } = props
   return <TextField fullWidth style={style}
+    aria-readonly={props.readonly}
     label={inputName}
     value={value}
     onChange={onChange}

@@ -7,7 +7,7 @@ import { StatusProps } from './props';
 import { handleChange } from '../../utilFunc/utilFunc';
 
 export const Status = (props: StatusProps) => {
-  const { status, setStatus } = props
+  const { status, setStatus, race } = props
   const [int, setInt] = useState('なし');
   const [percient, setPercient] = useState('五感');
   const [reaction, setReaction] = useState('友好的');
@@ -55,39 +55,48 @@ export const Status = (props: StatusProps) => {
 
   }, [status])
   return <div>
-    <div>
-      <FoudationStatus dataName='知能' data={int} useList={IntList} onChange={handleChange(setInt, (value) => value)} />
-      <FoudationStatus dataName='知覚' data={percient} useList={PercientList} onChange={handleChange(setPercient, (value) => value)} />
-      <FoudationStatus dataName='反応' data={reaction} useList={ReactionList} onChange={handleChange(setReaction, (value) => value)} />
-    </div>
-    <div>
-      <StatusInput style={{ width: "6em" }} inputName='穢れ' value={imp} onChange={handleChange(setImp, Number)} />
-    </div>
-    <div>
-      <MultipleSelectCheckmarks useData={LanguageList} tagName='言語' selectData={language} setSelectData={setLanguage} />
-      <MultipleSelectCheckmarks useData={HabitatList} tagName='生息地' selectData={habitat} setSelectData={setHabitat} />
-    </div>
-    <div style={{ marginTop: '1em' }}>
-      <Grid container alignItems="center">
-        弱点あり
-        <Checkbox checked={isWeak} value={isWeak} onChange={isWeakChange} />
-        <StatusInput style={{ width: "6em" }} inputName='知名度' value={popular} onChange={handleChange(setPopular, Number)} />
-        {isWeak ? <>
-          /<StatusInput style={{ width: "6em" }} inputName='弱点値' value={weakValue} onChange={handleChange(setWeakValue, Number)} />
-          <StatusInput style={{ width: "20em", marginLeft: '1em' }} inputName='弱点' value={weak} onChange={handleChange(setWeak, (value) => value)} />
-        </> : null}
-      </Grid>
-    </div>
+    {!(race == 'ゴーレム' || race == 'ファミリア') ?
+      <>
+        <div>
+          <FoudationStatus dataName='知能' data={int} useList={IntList} onChange={handleChange(setInt, (value) => value)} />
+          <FoudationStatus dataName='知覚' data={percient} useList={PercientList} onChange={handleChange(setPercient, (value) => value)} />
+          {!(race == '騎獣') ?
+            <FoudationStatus dataName='反応' data={reaction} useList={ReactionList} onChange={handleChange(setReaction, (value) => value)} />
+            : null}
+        </div>
+        <div>
+          <StatusInput style={{ width: "6em" }} inputName='穢れ' value={imp} onChange={handleChange(setImp, Number)} />
+        </div>
+        <div>
+          <MultipleSelectCheckmarks useData={LanguageList} tagName='言語' selectData={language} setSelectData={setLanguage} />
+          <MultipleSelectCheckmarks useData={HabitatList} tagName='生息地' selectData={habitat} setSelectData={setHabitat} />
+        </div>
+      </>
+      : null}
+    {!(race == 'ファミリア') ?
+      <div style={{ marginTop: '1em' }}>
+        <Grid container alignItems="center">
+          弱点あり
+          <Checkbox checked={isWeak} value={isWeak} onChange={isWeakChange} />
+          <StatusInput style={{ width: "6em" }} inputName='知名度' value={popular} onChange={handleChange(setPopular, Number)} />
+          {isWeak ? <>
+            /<StatusInput style={{ width: "6em" }} inputName='弱点値' value={weakValue} onChange={handleChange(setWeakValue, Number)} />
+            <StatusInput style={{ width: "20em", marginLeft: '1em' }} inputName='弱点' value={weak} onChange={handleChange(setWeak, (value) => value)} />
+          </> : null}
+        </Grid>
+      </div> : null}
     <div style={{ marginTop: '1em' }}>
       <Grid container alignItems={"center"}>
         <StatusInput style={{ width: "6em", marginRight: '1em' }} inputName='先制値' value={preem} onChange={handleChange(setPreem, Number)} />
         <StatusInput style={{ width: "10em", marginRight: '1em' }} inputName='移動速度' value={speed} onChange={handleChange(setSpeed, (value) => value)} />
-        <div style={{ marginRight: '1em' }}>
-          <StatusInput style={{ width: "6em" }} inputName='生命抵抗力' value={lifeRes} onChange={handleChange(setLifeRes, Number)} />{`(${lifeRes + 7})`}
-        </div>
-        <div style={{ marginRight: '1em' }}>
-          <StatusInput style={{ width: "6em" }} inputName='精神抵抗力' value={mindRes} onChange={handleChange(setMindRes, Number)} />{`(${mindRes + 7})`}
-        </div>
+        {!(race == 'ファミリア') ? <>
+          <div style={{ marginRight: '1em' }}>
+            <StatusInput style={{ width: "6em" }} inputName='生命抵抗力' value={lifeRes} onChange={handleChange(setLifeRes, Number)} />{`(${lifeRes + 7})`}
+          </div>
+          <div style={{ marginRight: '1em' }}>
+            <StatusInput style={{ width: "6em" }} inputName='精神抵抗力' value={mindRes} onChange={handleChange(setMindRes, Number)} />{`(${mindRes + 7})`}
+          </div>
+        </> : null}
       </Grid>
     </div>
   </div>

@@ -1,8 +1,9 @@
-import { TableRow, Checkbox, styled, TableCell, tableCellClasses, FormControl, FormLabel, Table, TableBody, Box, TextField, Select, MenuItem, SelectChangeEvent } from "@mui/material"
+import { TableRow, Checkbox, styled, TableCell, tableCellClasses, FormControl, FormLabel, Table, TableBody, Box, TextField, Select, MenuItem, SelectChangeEvent, FormControlLabel, FormGroup, InputLabel } from "@mui/material"
 import { StatusInput } from "./foundationStatus"
 import React, { useEffect, useState } from "react";
 import { handleChange } from "../../utilFunc/utilFunc";
 import MultipleSelectCheckmarks from "./checkSelect";
+import { abilityKindList, golemAllSizeItemList, golemItemList } from "../../const/monster";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -21,6 +22,7 @@ const ExplanationTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 type Props = {
+  race: string
   idx: number
   Abilitys: monster.abilitys
   setAbilitys: (l: monster.abilitys) => void
@@ -28,7 +30,7 @@ type Props = {
 }
 
 export const AbilityItem = (props: Props) => {
-  const { idx, Abilitys, setAbilitys, partNameList } = props
+  const { idx, Abilitys, setAbilitys, partNameList, race } = props
   const [item, setItem] = useState<string>('')
   const [name, setName] = useState<string>('')
   const [kind, setKind] = useState<string[]>([])
@@ -47,11 +49,31 @@ export const AbilityItem = (props: Props) => {
     tmp.abilitys[idx].item = item
     tmp.abilitys[idx].kind = kind
     tmp.abilitys[idx].name = name
-    const tmpUse = `${useValue >= 0 ? `/${useValue}(${useValue + 7})` : ''}${resistSkill ? `/${resistSkill}` : ''}${resistResult ? `/${resistResult}` : ''}`
+    const tmpUse = isUse ?
+      `${useValue >= 0 ?
+        `/${useValue}(${useValue + 7})` :
+        ''}${resistSkill ?
+          `/${resistSkill}` :
+          ''}${resistResult ?
+            `/${resistResult}` :
+            ''}` :
+      isMagic ? `/${magicValue}(${magicValue + 7})` : ''
     tmp.abilitys[idx].use = tmpUse !== "" ? tmpUse : undefined
     tmp.abilitys[idx].part = partName ? partName : undefined
     setAbilitys(tmp)
   }
+  const checkBoxCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (kind.includes(e.target.value)) {
+      let tmp = structuredClone(kind)
+      tmp = tmp.filter((t) => t !== e.target.value)
+      setKind(tmp)
+    } else {
+      setKind([...kind, e.target.value])
+    }
+  }
+  const onChangeItem = (event: SelectChangeEvent) => {
+    setItem(event.target.value);
+  };
   useEffect(() => {
     isUse ? setUseValue(0) : setUseValue(-1)
     isUse && isMagic ? setIsMagic(false) : null
@@ -64,14 +86,36 @@ export const AbilityItem = (props: Props) => {
     changeData()
   }, [item, name, kind, partName, useValue, resistSkill, resistResult])
   return (<>
+    <TableRow>
+      <StyledTableCell colSpan={6} style={{ padding: '0', height: 'auto', width: '100%' }}>
+        {abilityKindList.map((abiKind, id) =>
+          <FormControl key={id} >
+            <FormGroup row>
+              <FormControlLabel style={{ margin: '0' }} value={abiKind} control={<Checkbox checked={kind.indexOf(abiKind) !== -1} onChange={checkBoxCheck} />} label={abiKind} />
+            </FormGroup>
+          </FormControl>
+        )}
+      </StyledTableCell></TableRow>
     <TableRow key={idx}>
-      {partNameList.length > 2 ?
-        <StyledTableCell style={{ padding: '0', height: 'auto', width: '30%' }} sx={{ border: 'none' }}>
-          <MultipleSelectCheckmarks formSX={{ width: '100%' }} divStyle={{}} disabled={true} useData={partNameList} tagName="部位" selectData={partName} setSelectData={setPartName} />
+      {race === 'ゴーレム' ?
+        <StyledTableCell style={{ padding: '0', height: 'auto', width: '20%' }} sx={{ border: 'none' }}>
+          <FormControl fullWidth>
+            <InputLabel>アイテム</InputLabel>
+            <Select fullWidth value={item} onChange={onChangeItem} >
+              {golemAllSizeItemList.map((r, id) =>
+                <MenuItem key={id} value={r} >{r}</MenuItem>)}
+            </Select>
+          </FormControl>
         </StyledTableCell> : null}
-      <StyledTableCell style={{ padding: '0', height: 'auto', width: '35%' }} sx={{ border: 'none' }}>
+      {partNameList.length > 2 ?
+        <StyledTableCell style={{ padding: '0', height: 'auto', width: '25%' }} sx={{ border: 'none' }}>
+          <MultipleSelectCheckmarks formSX={{ width: '100%' }} divStyle={{}} disabled={true} useData={partNameList} tagName="部位" selectData={partName} setSelectData={setPartName} />
+        </StyledTableCell> : null
+      }
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '25%' }} sx={{ border: 'none' }}>
         <StatusInput inputName="能力名" value={name} onChange={handleChange(setName, (v) => v)} />
       </StyledTableCell>
+      {/* 14% */}
       <StyledTableCell style={{ padding: '0', height: 'auto', width: '7%' }} sx={{ border: 'none' }}>
         <FormControl>
           <FormLabel>対抗</FormLabel>
@@ -84,24 +128,35 @@ export const AbilityItem = (props: Props) => {
           <Checkbox style={{ margin: '-1em' }} checked={isMagic} onChange={() => { setIsMagic(!isMagic) }}></Checkbox>
         </FormControl>
       </StyledTableCell>
-      {isMagic ? <><StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
-        <StatusInput inputName="数値" value={magicValue} onChange={handleChange(setUseValue, Number)} />
-      </StyledTableCell><StyledTableCell style={{ padding: '0', height: 'auto', width: '5%' }}>
-          {`/ (${magicValue + 7})`}
-        </StyledTableCell></>
-        : <StyledTableCell style={{ width: '15%' }} sx={{ border: 'none' }}></StyledTableCell>
+      {isMagic ? // 15%
+        <>
+          <StyledTableCell style={{ padding: '0', height: 'auto', width: '11%' }}>
+            <StatusInput inputName="数値" value={magicValue} onChange={handleChange(setUseValue, Number)} />
+          </StyledTableCell><StyledTableCell style={{ padding: '0', height: 'auto', width: '5%' }}>
+            {`/ (${magicValue + 7})`}
+          </StyledTableCell>
+        </>
+        : <>
+          <StyledTableCell style={{ width: '11%' }} sx={{ border: 'none' }}></StyledTableCell>
+          <StyledTableCell style={{ width: '5%' }} sx={{ border: 'none' }}></StyledTableCell>
+        </>
       }
-      {partNameList.length! <= 2 ? <StyledTableCell style={{ width: '30%' }} sx={{ border: 'none' }}></StyledTableCell> : null}
-      <StyledTableCell style={{ width: '10%' }} sx={{ border: 'none' }}></StyledTableCell>
+      {partNameList.length! <= 2 ? // 20%
+        <StyledTableCell style={{ width: '20%' }} sx={{ border: 'none' }}></StyledTableCell>
+        : null}
+
+      {race !== 'ゴーレム' ?
+        <StyledTableCell style={{ width: '20%' }} sx={{ border: 'none' }}></StyledTableCell> : null}
     </TableRow>
     {isUse ?
       <TableRow key={`${idx}-use`}>
         <StyledTableCell colSpan={6} sx={{ border: 'none', padding: '0', paddingTop: '1em' }}>
-          <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }} sx={{ border: 'none' }}><StatusInput inputName="数値" value={useValue} onChange={handleChange(setUseValue, Number)} /></StyledTableCell>
-          <StyledTableCell style={{ padding: '0', height: 'auto', width: '6%' }} sx={{ border: 'none' }}>{`/ (${useValue + 7}) `}</StyledTableCell>
-          <StyledTableCell style={{ padding: '0', height: 'auto', width: '42%' }} sx={{ border: 'none' }}><StatusInput inputName="対抗基準値" value={resistSkill} onChange={handleChange(setResistSkill, v => v)} /></StyledTableCell>
-          <StyledTableCell style={{ padding: '0', height: 'auto', width: '42%' }} sx={{ border: 'none' }}><StatusInput inputName="対抗結果" value={resistResult} onChange={handleChange(setResistResult, v => v)} /></StyledTableCell>
-        </StyledTableCell>
+          <Table><TableBody><TableRow>
+            <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }} sx={{ border: 'none' }}><StatusInput inputName="数値" value={useValue} onChange={handleChange(setUseValue, Number)} /></StyledTableCell>
+            <StyledTableCell style={{ padding: '0', height: 'auto', width: '6%' }} sx={{ border: 'none' }}>{`/ (${useValue + 7}) `}</StyledTableCell>
+            <StyledTableCell style={{ padding: '0', height: 'auto', width: '42%' }} sx={{ border: 'none' }}><StatusInput inputName="対抗基準値" value={resistSkill} onChange={handleChange(setResistSkill, v => v)} /></StyledTableCell>
+            <StyledTableCell style={{ padding: '0', height: 'auto', width: '42%' }} sx={{ border: 'none' }}><StatusInput inputName="対抗結果" value={resistResult} onChange={handleChange(setResistResult, v => v)} /></StyledTableCell>
+          </TableRow></TableBody></Table></StyledTableCell>
       </TableRow>
       : null}
     <TableRow key={`${idx}-exp`}>

@@ -39,27 +39,48 @@ export const createBundle = functions.https.onRequest(async (req, res) => {
 
 // データを投稿する関数
 export const postData = functions.https.onRequest(async (req, res) => {
-  try {
-    const newData = req.body;
-    const docRef = await db.collection(COLLECTION_NAME).add(newData);
-    res.status(201).send(`Document written with ID: ${docRef.id}`);
-  } catch (error) {
-    console.error("Error adding document: ", error);
-    res.status(500).send("Error adding document");
-  }
+  corsHandler(req, res, async () => {
+    try {
+      res.set("Access-Control-Allow-Origin", "*");
+      res.set(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS"
+      );
+      res.set("Content-Type", "application/json");
+      const newData = req.body;
+      console.log("info", newData);
+      console.log(JSON.stringify(newData));
+      const docRef = await db.collection(COLLECTION_NAME).add(newData);
+      console.log(docRef);
+      res.status(201).send(`Document written with ID: ${docRef.id}`);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      res.status(500).send("Error adding document");
+    }
+  });
 });
 
 // データを編集する関数
 export const editData = functions.https.onRequest(async (req, res) => {
-  try {
-    const docId = req.query.id as string;
-    const updatedData = req.body;
-    await db.collection(COLLECTION_NAME).doc(docId).update(updatedData);
-    res.status(200).send("Document updated successfully");
-  } catch (error) {
-    console.error("Error updating document: ", error);
-    res.status(500).send("Error updating document");
-  }
+  corsHandler(req, res, async () => {
+    try {
+      const docId = req.query.id as string;
+      res.set("Access-Control-Allow-Origin", "*");
+      res.set(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS"
+      );
+      res.set("Content-Type", "application/json");
+      const updatedData = req.body;
+      console.log("info", updatedData);
+      console.log(JSON.stringify(updatedData));
+      await db.collection(COLLECTION_NAME).doc(docId).update(updatedData);
+      res.status(201).send(`Document written with ID: ${docId}`);
+    } catch (error) {
+      console.error("Error updating document: ", error);
+      res.status(500).send("Error updating document");
+    }
+  });
 });
 
 // データを削除する関数

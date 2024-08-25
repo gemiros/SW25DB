@@ -3,6 +3,7 @@ import { StatusInput } from "./foundationStatus"
 import { useEffect, useState } from "react";
 import { partInit } from "../../const/monster";
 import { handleChange } from "../../utilFunc/utilFunc";
+import { PartsDetailProps } from "./props";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -19,25 +20,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-type Props = {
-  levelId: number
-  idx: number
-  part: monster.part
-  levels: monster.level[]
-  setLevels: (l: monster.level[]) => void
-}
-
-export const PartItem = (props: Props) => {
-  const { idx, part } = props
+export const PartItem = (props: PartsDetailProps) => {
+  const { idx, part, race } = props
   const [core, setCore] = useState<boolean>(false)
-  const [isMP, setIsMP] = useState<boolean>(false)
+  const [isMP, setIsMP] = useState<boolean>(true)
   const [name, setName] = useState<string>('')
   const [hit, setHit] = useState<number>(0)
   const [damage, setDamage] = useState<number>(0)
   const [avoid, setAvoid] = useState<number>(0)
   const [protect, setProtect] = useState<number>(0)
   const [hp, setHP] = useState<number>(0)
-  const [mp, setMP] = useState<number>(-1)
+  const [mp, setMP] = useState<number>(0)
+  const [mind, setMind] = useState<number>(0)
+  const [life, setLife] = useState<number>(0)
 
   const changeIsMP = () => {
     setIsMP(!isMP)
@@ -57,22 +52,30 @@ export const PartItem = (props: Props) => {
     tmp.protect = protect
     tmp.hp = hp
     tmp.mp = mp < 0 ? '-' : String(mp)
+    tmp.lifeRes = race == '騎獣' ? life : undefined
+    tmp.mindRes = race == '騎獣' ? mind : undefined
     const tmp2 = structuredClone(props.levels)
     tmp2[props.levelId].parts[idx] = tmp
+
     props.setLevels(tmp2)
   }
   useEffect(() => {
     changeData()
-  }, [avoid, name, hit, damage, avoid, protect, hp, mp, core])
+  }, [avoid, name, hit, damage, avoid, protect, hp, mp, core, life, mind])
   return <TableRow key={idx}>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1em' }}><Checkbox checked={core} onChange={changeCore}></Checkbox></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10em' }}><StatusInput inputName="攻撃方法" value={name} onChange={handleChange(setName, (v) => v)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '6em' }}><StatusInput inputName="命中力" value={hit} onChange={handleChange(setHit, Number)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '6em' }}><StatusInput inputName="打撃点" value={damage} onChange={handleChange(setDamage, Number)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '6em' }}><StatusInput inputName="回避力" value={avoid} onChange={handleChange(setAvoid, Number)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '6em' }}><StatusInput inputName="防護点" value={protect} onChange={handleChange(setProtect, Number)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '4em' }}><StatusInput inputName="HP" value={hp} onChange={handleChange(setHP, Number)} /></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1em' }}><Checkbox checked={isMP} onChange={changeIsMP}></Checkbox></StyledTableCell>
-    {isMP ? <StyledTableCell style={{ padding: '0', height: 'auto', width: '4em' }}><StatusInput inputName="MP" value={mp} onChange={handleChange(setMP, Number)} /></StyledTableCell> : null}
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}><Checkbox checked={core} onChange={changeCore}></Checkbox></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '19%' }}><StatusInput inputName="攻撃方法" value={name} onChange={handleChange(setName, (v) => v)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="命中力" value={hit} onChange={handleChange(setHit, Number)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="打撃点" value={damage} onChange={handleChange(setDamage, Number)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="回避力" value={avoid} onChange={handleChange(setAvoid, Number)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="防護点" value={protect} onChange={handleChange(setProtect, Number)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="HP" value={hp} onChange={handleChange(setHP, Number)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}><Checkbox checked={isMP} onChange={changeIsMP}></Checkbox></StyledTableCell>
+    {isMP ? <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="MP" value={mp} onChange={handleChange(setMP, Number)} /></StyledTableCell>
+      : <StyledTableCell style={{ border: 'none', padding: '0', height: 'auto', width: '10%' }}></StyledTableCell>}
+    {race == '騎獣' ? <>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="生命抵抗" value={life} onChange={handleChange(setLife, Number)} /></StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="精神抵抗" value={mind} onChange={handleChange(setMind, Number)} /></StyledTableCell>
+    </> : null}
   </TableRow>
 }

@@ -7,6 +7,10 @@ import {
 } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 
+// const hostingUrl ='http://localhost:5001/sw25datas/us-central1/getDatas'
+// const hostingUrl = 'http://localhost:5000'
+const hostingUrl = "https://sw25datas.web.app";
+const functionUrl = "https://us-central1-sw25datas.cloudfunctions.net/postData";
 const QUERY_NAME = "monsterDB_query";
 export const firebaseConfig = {
   projectId: "sw25datas",
@@ -14,8 +18,8 @@ export const firebaseConfig = {
 
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
-export const loadFirestoreBundle = async (baseUrl: string) => {
-  const bundle = await fetch(`${baseUrl}/createBundle`);
+export const loadFirestoreBundle = async () => {
+  const bundle = await fetch(`${hostingUrl}/createBundle`);
   const db = getFirestore();
   if (bundle.body === null) {
     console.warn("BUndle has no data");
@@ -36,4 +40,15 @@ export const loadFirestoreBundle = async (baseUrl: string) => {
     res.push(data as unknown as monster.monster);
   });
   return res;
+};
+
+export const postData = async (data: monster.monster) => {
+  const db = await fetch(`${functionUrl}/postData`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  console.log(db.body);
 };

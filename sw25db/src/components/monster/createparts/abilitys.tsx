@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { AbilitysProps } from "./props"
 import { StatusInput } from "./foundationStatus"
 import { handleChange } from "../../utilFunc/utilFunc"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Paper, Table, TableBody, TableContainer, Typography } from "@mui/material"
-import { PartItem } from "./partItem"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Table, TableBody, Typography } from "@mui/material"
 import { AbilityItem } from "./abilityItem"
-import { abilityInit, abilitysInit } from "../../const/monster"
+import { abilityInit } from "../../const/monster"
 import { AddCircle, KeyboardArrowDown, KeyboardArrowUp, RemoveCircle, } from "@mui/icons-material"
 import CachedIcon from '@mui/icons-material/Cached';
 import { humanRace } from "../uniqueAbility/human"
@@ -59,6 +58,13 @@ export const Abilitys = (props: AbilitysProps) => {
           setUnique(familiaUnique)
         }
         break;
+      case '騎獣':
+        if (top.subRace) {
+          if (top.subRace == '魔動機') {
+            setUnique(magicMonsterUnique)
+          }
+        }
+        break
       default:
         break;
     }
@@ -84,6 +90,7 @@ export const Abilitys = (props: AbilitysProps) => {
   const allClear = () => {
     setAbilitys({ abilitys: [] })
   }
+
   useEffect(() => {
     const tmp = structuredClone(abilitys)
     tmp.max = max >= 1 ? max : undefined
@@ -92,7 +99,7 @@ export const Abilitys = (props: AbilitysProps) => {
   return <div style={{ marginTop: '1em' }}>
     <hr></hr>
     <h3>特殊能力</h3>
-    <StatusInput style={{ width: '6em' }} inputName={"最大値"} value={max} onChange={handleChange(setMax, Number)} ></StatusInput>
+    {top.race == 'ゴーレム' ? <StatusInput style={{ width: '6em' }} inputName={"最大値"} value={max} onChange={handleChange(setMax, Number)} ></StatusInput> : null}
     <div>
       {unique ? <Accordion style={{ margin: '1em', padding: '0em', backgroundColor: '#f0f0f0', border: '1px solid #ddd', borderRadius: '1em' }}>
         <AccordionSummary expandIcon={expanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}>
@@ -112,7 +119,7 @@ export const Abilitys = (props: AbilitysProps) => {
     <Table style={{ width: '716px' }} sx={{ border: 'none' }}>
       <TableBody>
         {abilitys.abilitys.map((_abi, idx) =>
-          <AbilityItem key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList}></AbilityItem>)}
+          <AbilityItem race={top.race} key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList}></AbilityItem>)}
       </TableBody>
     </Table>
   </div>

@@ -3,6 +3,7 @@ import { race } from "../uniqueAbility/human";
 export type StatusProps = {
   status: monster.status;
   setStatus: (s: monster.status) => void;
+  race: string;
 };
 
 export type TopProps = {
@@ -15,6 +16,17 @@ export type TopProps = {
 export type PartsProps = {
   levels: monster.level[];
   setLevels: (l: monster.level[]) => void;
+  race: string;
+  lv: number;
+};
+
+export type PartsDetailProps = {
+  levelId: number;
+  idx: number;
+  part: monster.part;
+  levels: monster.level[];
+  setLevels: (l: monster.level[]) => void;
+  race: string;
 };
 
 export type AbilitysProps = {
