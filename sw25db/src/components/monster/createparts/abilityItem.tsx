@@ -27,6 +27,7 @@ type Props = {
   Abilitys: monster.abilitys
   setAbilitys: (l: monster.abilitys) => void
   partNameList: string[]
+  paramName: string
 }
 
 export const AbilityItem = (props: Props) => {
@@ -85,6 +86,23 @@ export const AbilityItem = (props: Props) => {
   useEffect(() => {
     changeData()
   }, [item, name, kind, partName, useValue, resistSkill, resistResult])
+  useEffect(() => {
+    setItem(Abilitys.abilitys[idx].item ?? '')
+    setName(Abilitys.abilitys[idx].name ?? '')
+    setKind(Abilitys.abilitys[idx].kind ?? [])
+    setPartName(Abilitys.abilitys[idx].part ?? [])
+    if (Abilitys.abilitys[idx].useValue) {
+      setIsUse(true)
+    }
+    if (Abilitys.abilitys[idx].magic) {
+      setIsMagic(true)
+    }
+    setUseValue(Abilitys.abilitys[idx].useValue ?? -1)
+    setMagicValue(Abilitys.abilitys[idx].magic ?? -1)
+    setResistSkill(Abilitys.abilitys[idx].resistSkill ?? '')
+    setResistResult(Abilitys.abilitys[idx].resistResult ?? '')
+    setExplanation(Abilitys.abilitys[idx].explain ?? '')
+  }, [props.paramName])
   return (<>
     <TableRow>
       <StyledTableCell colSpan={6} style={{ padding: '0', height: 'auto', width: '100%' }}>

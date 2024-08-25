@@ -39,9 +39,17 @@ export const Top = (props: TopProps) => {
     tmp.lv = lv
     tmp.race = race
     tmp.page = page
-    tmp.subRace = subRace ?? undefined
+    tmp.subRace = subRace ?? ''
     setTop(tmp)
   }, [race, name, lv, subRace, page])
+
+  useEffect(() => {
+    setName(top.name ?? '')
+    setLv(top.lv ?? 0)
+    setRace(top.race ?? '')
+    setPage(top.page ?? '')
+    setSubRace(top.subRace ?? '')
+  }, [props.paramName])
   return (<div style={{ padding: '0em', paddingBottom: '1em' }}>
     <div style={{ paddingTop: '1em' }}>
       <FormControl style={{ paddingRight: '1em' }}>
@@ -63,9 +71,9 @@ export const Top = (props: TopProps) => {
       />
       <FormControl style={{ marginLeft: '1em' }}>
         <FormGroup row>
-          <FormControlLabel value={'ルルブ'} control={<Checkbox checked={tags.indexOf('ルルブ') !== -1} onChange={checkBoxCheck} />} label={"ルルブ"} />
-          <FormControlLabel value={'ボス'} control={<Checkbox checked={tags.indexOf('ボス') !== -1} onChange={checkBoxCheck} />} label={"ボス"} />
-          <FormControlLabel value={'オリジナル'} control={<Checkbox checked={tags.indexOf('オリジナル') !== -1} onChange={checkBoxCheck} />} label={"オリジナル"} />
+          <FormControlLabel value={'main'} control={<Checkbox checked={tags.indexOf('main') !== -1} onChange={checkBoxCheck} />} label={"ルルブ"} />
+          <FormControlLabel value={'boss'} control={<Checkbox checked={tags.indexOf('boss') !== -1} onChange={checkBoxCheck} />} label={"ボス"} />
+          <FormControlLabel value={'original'} control={<Checkbox checked={tags.indexOf('original') !== -1} onChange={checkBoxCheck} />} label={"オリジナル"} />
         </FormGroup>
       </FormControl>
       <TextField style={{ width: "10em", marginLeft: '1em' }}

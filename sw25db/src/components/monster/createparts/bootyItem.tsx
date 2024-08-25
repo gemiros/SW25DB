@@ -45,7 +45,18 @@ export const BootyItem = (props: BootysProps) => {
     tmp[id!] = booty
     setBootys(tmp)
   }, [dice, item, gamel, isCard, cardRank, cardKind])
-
+  useEffect(() => {
+    setDice(bootys[id!].dice ?? '')
+    setItem(bootys[id!].item ?? '')
+    setGamel(bootys[id!].gamel ?? 0)
+    if (bootys[id!].cardKind && bootys[id!].cardRank) {
+      setIsCard(true)
+    } else {
+      setIsCard(false)
+    }
+    setCardRank(bootys[id!].cardRank ?? 'B')
+    setCardKind(bootys[id!].cardKind ?? [])
+  }, [props.paramName])
   return (
     <TableRow>
       <StyledTableCell style={{ padding: '0', height: 'auto', width: '15%' }}>

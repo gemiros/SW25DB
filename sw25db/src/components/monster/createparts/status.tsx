@@ -1,6 +1,6 @@
 import { Checkbox, Grid, } from '@mui/material';
 import { useEffect, useState } from "react"
-import { HabitatList, IntList, LanguageList, PercientList, ReactionList } from "../../const/monster"
+import { HabitatList, IntList, LanguageList, PercientList, ReactionList, statusInit } from "../../const/monster"
 import MultipleSelectCheckmarks from './checkSelect';
 import { FoudationStatus, StatusInput } from './foundationStatus';
 import { StatusProps } from './props';
@@ -49,11 +49,22 @@ export const Status = (props: StatusProps) => {
     tmp.mind = mindRes
     setStatus(tmp)
   }, [int, percient, reaction, imp, language, habitat, popular, weakValue, weak, preem, speed, lifeRes, mindRes])
-
   useEffect(() => {
     console.log(status);
-
-  }, [status])
+    setInt(status.int ?? 'なし')
+    setPercient(status.perc ?? '五感')
+    setReaction(status.reac ?? '友好的')
+    setImp(status.imp ?? 0)
+    setLanguage(status.lang ?? [])
+    setHabitat(status.habi ?? [])
+    setPopular(status.pop ?? 0)
+    setWeakValue(status.weakValue ?? -1)
+    setWeak(status.weak ?? '')
+    setPreem(status.preem ?? 0)
+    setSpeed(status.speed ?? '- / -')
+    setLifeRes(status.life ?? 0)
+    setMindRes(status.mind ?? 0)
+  }, [props.paramName])
   return <div>
     {!(race == 'ゴーレム' || race == 'ファミリア') ?
       <>

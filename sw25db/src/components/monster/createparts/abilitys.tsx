@@ -96,6 +96,9 @@ export const Abilitys = (props: AbilitysProps) => {
     tmp.max = max >= 1 ? max : undefined
     setAbilitys(tmp)
   }, [max])
+  useEffect(() => {
+    setMax(abilitys.max ?? 0)
+  }, [props.paramName])
   return <div style={{ marginTop: '1em' }}>
     <hr></hr>
     <h3>特殊能力</h3>
@@ -119,7 +122,7 @@ export const Abilitys = (props: AbilitysProps) => {
     <Table style={{ width: '716px' }} sx={{ border: 'none' }}>
       <TableBody>
         {abilitys.abilitys.map((_abi, idx) =>
-          <AbilityItem race={top.race} key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList}></AbilityItem>)}
+          <AbilityItem paramName={props.paramName} race={top.race} key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList}></AbilityItem>)}
       </TableBody>
     </Table>
   </div>

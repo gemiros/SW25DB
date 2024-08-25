@@ -4,6 +4,7 @@ export type StatusProps = {
   status: monster.status;
   setStatus: (s: monster.status) => void;
   race: string;
+  paramName: string;
 };
 
 export type TopProps = {
@@ -11,6 +12,7 @@ export type TopProps = {
   setTop: (t: monster.top) => void;
   tags: string[];
   setTags: (t: string[]) => void;
+  paramName: string;
 };
 
 export type PartsProps = {
@@ -18,6 +20,7 @@ export type PartsProps = {
   setLevels: (l: monster.level[]) => void;
   race: string;
   lv: number;
+  paramName: string;
 };
 
 export type PartsDetailProps = {
@@ -27,6 +30,7 @@ export type PartsDetailProps = {
   levels: monster.level[];
   setLevels: (l: monster.level[]) => void;
   race: string;
+  paramName: string;
 };
 
 export type AbilitysProps = {
@@ -34,6 +38,7 @@ export type AbilitysProps = {
   partNameList: string[];
   abilitys: monster.abilitys;
   setAbilitys: (a: monster.abilitys) => void;
+  paramName: string;
 };
 
 export type AbilityDetailProps = {
@@ -52,9 +57,11 @@ export type BootysProps = {
   bootys: monster.booty[];
   setBootys: (b: monster.booty[]) => void;
   id?: number;
+  paramName: string;
 };
 
 export type ExplanationProps = {
   explanation: string;
   setExplanation: (e: string) => void;
+  paramName: string;
 };

@@ -62,6 +62,19 @@ export const PartItem = (props: PartsDetailProps) => {
   useEffect(() => {
     changeData()
   }, [avoid, name, hit, damage, avoid, protect, hp, mp, core, life, mind])
+  useEffect(() => {
+    setAvoid(part.avoid ?? 0)
+    setName(part.name ?? 0)
+    setHit(part.hit ?? 0)
+    setDamage(part.damage ?? 0)
+    setAvoid(part.avoid ?? 0)
+    setProtect(part.protect ?? 0)
+    setHP(part.hp ?? 0)
+    setMP(Number(part.mp) ?? 0)
+    setCore(part.core ?? false)
+    setLife(part.lifeRes ?? 0)
+    setMind(part.mindRes ?? 0)
+  }, [props.paramName])
   return <TableRow key={idx}>
     <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}><Checkbox checked={core} onChange={changeCore}></Checkbox></StyledTableCell>
     <StyledTableCell style={{ padding: '0', height: 'auto', width: '19%' }}><StatusInput inputName="攻撃方法" value={name} onChange={handleChange(setName, (v) => v)} /></StyledTableCell>

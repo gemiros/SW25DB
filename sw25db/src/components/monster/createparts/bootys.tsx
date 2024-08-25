@@ -34,7 +34,7 @@ export const Bootys = (props: BootysProps) => {
     </div>
     <Table>
       <TableBody>
-        {bootys.map((_booty, id) => <BootyItem key={id} id={id} bootys={bootys} setBootys={setBootys} />)}
+        {bootys.map((_booty, id) => <BootyItem paramName={props.paramName} key={id} id={id} bootys={bootys} setBootys={setBootys} />)}
       </TableBody>
     </Table>
   </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MonsterViewTop } from './viewparts/top';
 import { MonsterViewStatus } from './viewparts/status';
 import { MonsterViewParts } from './viewparts/parts';
@@ -13,6 +13,7 @@ import { undeadUnique } from './uniqueAbility/undead';
 import { golemUnique, golemUniqueStatus } from './uniqueAbility/golem';
 import { ancientFairyUnique, commonFairyUnique } from './uniqueAbility/fairy';
 import { familia2Unique, familiaUnique, familiaUniqueStatus1, familiaUniqueStatus2 } from './uniqueAbility/familia';
+import { Button } from '@mui/material';
 
 type Props = {
   monsters: monster.monster[]
@@ -40,8 +41,16 @@ const MonsterView = (props: Props) => {
   const params = useParams()
   const name = params.name
 
+  const navigate = useNavigate()
+  const duplicate = () => {
+    navigate(`/monster/duplicate/${name}`)
+  }
+
   useEffect(() => {
     for (let i = 0; i < props.monsters.length; i++) {
+      if (!props.monsters[i].Top) {
+        continue
+      }
       if (props.monsters[i].Top.name === name) {
         setMons(props.monsters[i])
         console.log(props.monsters[i]);
@@ -110,6 +119,9 @@ const MonsterView = (props: Props) => {
       {mons ? (
         <React.Fragment>
           <CopyMonsterPiece monster={mons} levelId={useLevelId} hRace={hRace} />
+          <div>
+            <Button style={{ margin: '1em' }} variant='contained' onClick={duplicate}>複製</Button>
+          </div>
           <MonsterViewTop top={mons.Top} hRace={hRace} setHRace={setHRace} />
           <MonsterViewStatus fixedStatus={fixedStatus} status={mons.Status} hRace={hRace} top={mons.Top} />
           <MonsterViewParts parts={mons.Parts} useLevelId={useLevelId} setUseLevelId={setUseLevelId} core={core} setCore={setCore} hRace={hRace} />

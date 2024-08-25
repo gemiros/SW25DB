@@ -42,8 +42,8 @@ function App() {
               <Routes>
                 <Route path='/' element={<MonsterIndex monsters={monsters} setMonster={setMonsters} />} />
                 <Route path='/monster/create' element={<MonsterCreate />} />
-                <Route path='/monster/edit/:name' element={<MonsterCreate />} />
-                <Route path='/monster/duplicate/:name' element={<MonsterCreate />} />
+                <Route path='/monster/edit/:name' element={<MonsterCreate monsters={monsters} />} />
+                <Route path='/monster/duplicate/:name' element={<MonsterCreate monsters={monsters} />} />
                 <Route path='/monster/view/:name' element={<MonsterView monsters={monsters} />} />
               </Routes>
             </Router>

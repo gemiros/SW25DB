@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react"
 import { PartsProps } from "./props"
 import CachedIcon from '@mui/icons-material/Cached';
 import { Button, styled, Table, TableBody, TableCell, tableCellClasses, TableRow } from "@mui/material";
-import { levelInit, partInit, raceList } from "../../const/monster";
+import { levelInit, partInit } from "../../const/monster";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { PartItem } from "./partItem";
-import { handleChange } from "../../utilFunc/utilFunc";
-import { StatusInput } from "./foundationStatus";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
@@ -87,6 +85,15 @@ export const Parts = (props: PartsProps) => {
       setCores([])
     }
   }, [levels])
+  useEffect(() => {
+    if (levels.length) {
+      if (levels[0].parts.length) {
+        setCores(levels[0].parts.filter((part) => part.core).map((part) => part.name))
+      }
+    } else {
+      setCores([])
+    }
+  }, [props.paramName])
   return <div style={{ marginTop: '1em' }}>
     {race === '騎獣' ? <>
       <Button variant="contained" style={{ marginBottom: '1em' }} onClick={lvPlus}>Lv追加<AddCircle /></Button>
@@ -102,13 +109,13 @@ export const Parts = (props: PartsProps) => {
             <TableRow>
               <StyledTableCell style={{ padding: '0', height: 'auto' }}>Lv.{level.lv}</StyledTableCell>
             </TableRow>
-            {level.parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} />)}
+            {level.parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} paramName={props.paramName} />)}
           </React.Fragment>) : null}
         </TableBody>
       </Table> :
       <Table>
         <TableBody>
-          {levels.length ? levels[0].parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} />) : null}
+          {levels.length ? levels[0].parts.map((part, idx) => <PartItem key={idx} levelId={0} idx={idx} part={part} levels={levels} setLevels={setLevels} race={race} paramName={props.paramName} />) : null}
         </TableBody>
       </Table>}
     コア部位：{cores.length ? cores.join('、') : 'なし'}

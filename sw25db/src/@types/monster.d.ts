@@ -93,6 +93,10 @@ declare namespace monster {
     kind: Array<string>;
     name: string;
     use?: string;
+    magic?: number;
+    useValue?: number;
+    resistSkill?: string;
+    resistResult?: string;
     explain?: string;
     part?: string[];
     using?: boolean;
