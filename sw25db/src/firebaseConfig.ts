@@ -10,7 +10,8 @@ import firebase from "firebase/compat/app";
 // const hostingUrl ='http://localhost:5001/sw25datas/us-central1/getDatas'
 // const hostingUrl = 'http://localhost:5000'
 const hostingUrl = "https://sw25datas.web.app";
-const functionUrl = "https://us-central1-sw25datas.cloudfunctions.net/postData";
+// const functionUrl = "http://localhost:5001/sw25datas/us-central1";
+const functionUrl = "https://us-central1-sw25datas.cloudfunctions.net";
 const QUERY_NAME = "monsterDB_query";
 export const firebaseConfig = {
   projectId: "sw25datas",
@@ -44,6 +45,17 @@ export const loadFirestoreBundle = async () => {
 
 export const postData = async (data: monster.monster) => {
   const db = await fetch(`${functionUrl}/postData`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  console.log(db.body);
+};
+
+export const editData = async (data: monster.monster) => {
+  const db = await fetch(`${functionUrl}/editData`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

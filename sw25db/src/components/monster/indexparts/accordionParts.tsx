@@ -17,7 +17,7 @@ export const AccordionParts = (props: Props) => {
         (<></>)
       }
       {props.monsters.map((monster, idx) => (
-        <React.Fragment key={`${idx}-${props.tagName}`}><Link to={`${monsterViewDetail}/${monster.Top.name}`}>{monster.Top.name}</Link><br /></React.Fragment>
+        <React.Fragment key={`${idx}-${props.tagName}`}><Link to={`${monsterViewDetail}/${monster.Top.name}`}>Lv.{monster.Top.lv} {monster.Top.name}</Link><br /></React.Fragment>
       ))}
     </>
   )

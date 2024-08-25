@@ -64,7 +64,10 @@ export const postData = functions.https.onRequest(async (req, res) => {
 export const editData = functions.https.onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
     try {
-      const docId = req.query.id as string;
+      const docId = req.body.id;
+      console.log(docId);
+      console.log(req.body);
+
       res.set("Access-Control-Allow-Origin", "*");
       res.set(
         "Access-Control-Allow-Methods",

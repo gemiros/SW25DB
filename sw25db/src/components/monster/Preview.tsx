@@ -45,6 +45,9 @@ const MonsterView = (props: Props) => {
   const duplicate = () => {
     navigate(`/monster/duplicate/${name}`)
   }
+  const edit = () => {
+    navigate(`/monster/edit/${name}`)
+  }
 
   useEffect(() => {
     for (let i = 0; i < props.monsters.length; i++) {
@@ -120,6 +123,7 @@ const MonsterView = (props: Props) => {
         <React.Fragment>
           <CopyMonsterPiece monster={mons} levelId={useLevelId} hRace={hRace} />
           <div>
+            <Button style={{ margin: '1em' }} variant='contained' onClick={edit}>編集</Button>
             <Button style={{ margin: '1em' }} variant='contained' onClick={duplicate}>複製</Button>
           </div>
           <MonsterViewTop top={mons.Top} hRace={hRace} setHRace={setHRace} />

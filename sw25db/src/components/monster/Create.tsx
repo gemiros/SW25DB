@@ -8,8 +8,8 @@ import { Explanation } from './createparts/explanation';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, Typography } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { abilitysInit, statusInit, tooInit } from '../const/monster';
-import { postData } from '../../firebaseConfig';
-import { useNavigate, useParams } from 'react-router-dom';
+import { editData, postData } from '../../firebaseConfig';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 type Props = {
   monsters?: monster.monster[]
@@ -26,9 +26,12 @@ const MonsterCreate = (props: Props) => {
   const [bootys, setBootys] = useState<monster.booty[]>([])
   const [explanation, setExplanation] = useState<string>('')
   const [paraName, setParaName] = useState<string>('')
-
+  const [isEdit, setIsEdit] = useState<boolean>(false)
   const [statusExpanded, setStatusExpanded] = useState(true);
   const [partNameList, setPartNameList] = useState<string[]>(["全身"])
+  const [monsId, setMonsId] = useState<string>('')
+
+  const locate = useLocation()
 
   const toggleStatusAccordion = () => {
     setStatusExpanded(!statusExpanded);
@@ -44,7 +47,23 @@ const MonsterCreate = (props: Props) => {
       Tags: tags
     }
     console.log(data);
+    console.log('duplicate')
     await postData(data)
+    navigate('/')
+  }
+  const editMonster = async () => {
+    const data: monster.monster = {
+      id: monsId,
+      Top: top,
+      Status: status,
+      Parts: levels,
+      Abilitys: abilitys,
+      Explanation: explanation,
+      Tags: tags
+    }
+    console.log(data);
+    console.log('edit')
+    await editData(data)
     navigate('/')
   }
   useEffect(() => {
@@ -61,6 +80,7 @@ const MonsterCreate = (props: Props) => {
       const dup = props.monsters.filter((m) => m.Top).find((m) => m.Top.name == name)
       console.log(dup);
       if (dup) {
+        setMonsId(dup.id)
         setTop(dup.Top)
         setTags(dup.Tags)
         setStatus(dup.Status)
@@ -73,6 +93,7 @@ const MonsterCreate = (props: Props) => {
         }
         setExplanation(dup.Explanation)
       } else {
+        setMonsId('')
         setTop(structuredClone(tooInit))
         setTags([])
         setStatus(structuredClone(statusInit))
@@ -84,6 +105,12 @@ const MonsterCreate = (props: Props) => {
     }
     setParaName(name ?? '')
   }, [name, props.monsters])
+
+  useEffect(() => {
+    const l = locate.pathname
+    const i = l.indexOf('/monster/edit')
+    setIsEdit(i >= 0)
+  }, [])
 
   return (
     <div>
@@ -103,7 +130,10 @@ const MonsterCreate = (props: Props) => {
       <Bootys bootys={bootys} setBootys={setBootys} paramName={paraName ?? ''} />
       <Explanation explanation={explanation} setExplanation={setExplanation} paramName={paraName ?? ''} />
       <Grid justifyContent={'end'} container>
-        <Button style={{ margin: '1em' }} variant='contained' onClick={createMonster}>作成</Button>
+        {isEdit
+          ? <Button style={{ margin: '1em' }} variant='contained' onClick={editMonster}>編集</Button>
+          : <Button style={{ margin: '1em' }} variant='contained' onClick={createMonster}>作成</Button>
+        }
       </Grid>
     </div>
   );
