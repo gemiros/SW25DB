@@ -102,12 +102,12 @@ function updateFoundationTextStatus(
           createLabel(
             partName + "HP",
             (part.hp + hRace.fixPart.hp).toString(),
-            (+hRace.fixPart.hp).toString()
+            (part.hp + hRace.fixPart.hp).toString()
           ),
           createLabel(
             partName + "MP",
-            (Number(part.mp) + hRace.fixPart.mp).toString(),
-            (Number(part.mp) + hRace.fixPart.mp).toString()
+            (Number(part.mp) + Number(hRace.fixPart.mp)).toString(),
+            (Number(part.mp) + Number(hRace.fixPart.mp)).toString()
           ),
         ]
       );

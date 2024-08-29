@@ -26,15 +26,13 @@ export const MonsterIndex = (props: Props) => {
   useEffect(() => {
     const sortMons = () => {
       setRaceMonsters([])
-      console.log(props.monsters);
       let sortedMons = props.monsters.filter((data) => data.Top)
-      console.log(sortedMons);
       console.log(props.monsters.filter((data) => !data.Top));
-
       try {
         sortedMons = props.monsters
           .sort((a, b) => { return a.Top.name.localeCompare(b.Top.name) })
           .sort((a, b) => a.Top.lv - b.Top.lv)
+        console.log(sortedMons);
         props.setMonster(sortedMons)
       } catch (error) {
         console.log(error);

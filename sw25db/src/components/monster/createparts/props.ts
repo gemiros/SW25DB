@@ -17,7 +17,7 @@ export type TopProps = {
 
 export type PartsProps = {
   levels: monster.level[];
-  setLevels: (l: monster.level[]) => void;
+  setLevels: React.Dispatch<React.SetStateAction<monster.level[]>>;
   race: string;
   lv: number;
   paramName: string;
@@ -28,16 +28,18 @@ export type PartsDetailProps = {
   idx: number;
   part: monster.part;
   levels: monster.level[];
-  setLevels: (l: monster.level[]) => void;
+  setLevels: React.Dispatch<React.SetStateAction<monster.level[]>>;
   race: string;
   paramName: string;
+  oneParts: monster.part[];
+  setOneParts: React.Dispatch<React.SetStateAction<monster.part[]>>;
 };
 
 export type AbilitysProps = {
   top: monster.top;
   partNameList: string[];
   abilitys: monster.abilitys;
-  setAbilitys: (a: monster.abilitys) => void;
+  setAbilitys: React.Dispatch<React.SetStateAction<monster.abilitys>>;
   paramName: string;
 };
 

@@ -20,10 +20,6 @@ export const Bootys = (props: BootysProps) => {
   const allClear = () => {
     setBootys([])
   }
-  useEffect(() => {
-    console.log(bootys);
-
-  }, [bootys])
   return <div>
     <hr></hr>
     <h3>戦利品</h3>

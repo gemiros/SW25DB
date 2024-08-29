@@ -26,11 +26,13 @@ type Props2 = {
   style?: React.CSSProperties | undefined
   endAdornment?: null
   readonly?: boolean
+  disabled?: boolean
 }
 
 export const StatusInput = (props: Props2) => {
   const { inputName, value, onChange, style } = props
   return <TextField fullWidth style={style}
+    disabled={props.disabled}
     aria-readonly={props.readonly}
     label={inputName}
     value={value}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { AbilitysProps } from "./props"
 import { StatusInput } from "./foundationStatus"
 import { handleChange } from "../../utilFunc/utilFunc"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Table, TableBody, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Table, TableBody, TableRow, Typography } from "@mui/material"
 import { AbilityItem } from "./abilityItem"
 import { abilityInit } from "../../const/monster"
 import { AddCircle, KeyboardArrowDown, KeyboardArrowUp, RemoveCircle, } from "@mui/icons-material"
@@ -20,6 +20,7 @@ export const Abilitys = (props: AbilitysProps) => {
   const [max, setMax] = useState<number>(0)
   const [expanded, setExpanded] = useState(false)
   const [unique, setUnique] = useState<monster.ability[] | null>(null)
+  const [changeFlg, setChangeFlg] = useState<boolean>(false)
   useEffect(() => {
     setUnique(null)
     switch (top.race) {
@@ -95,7 +96,7 @@ export const Abilitys = (props: AbilitysProps) => {
     const tmp = structuredClone(abilitys)
     tmp.max = max >= 1 ? max : undefined
     setAbilitys(tmp)
-  }, [max])
+  }, [max, changeFlg])
   useEffect(() => {
     setMax(abilitys.max ?? 0)
   }, [props.paramName])
@@ -119,10 +120,13 @@ export const Abilitys = (props: AbilitysProps) => {
       <Button variant="contained" onClick={partsMinus}>能力削除<RemoveCircle /></Button>
       <Button variant="contained" onClick={allClear}>クリア<CachedIcon /></Button>
     </div>
-    <Table style={{ width: '716px' }} sx={{ border: 'none' }}>
+    <Table sx={{ border: 'none' }}>
       <TableBody>
         {abilitys.abilitys.map((_abi, idx) =>
-          <AbilityItem paramName={props.paramName} race={top.race} key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList}></AbilityItem>)}
+          <TableRow key={idx}>
+            <AbilityItem paramName={props.paramName} race={top.race} key={idx} idx={idx} Abilitys={abilitys} setAbilitys={setAbilitys} partNameList={partNameList} changeFlg={changeFlg} setChangeFlg={setChangeFlg}></AbilityItem>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   </div>

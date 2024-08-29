@@ -46,17 +46,29 @@ export const BootyItem = (props: BootysProps) => {
     setBootys(tmp)
   }, [dice, item, gamel, isCard, cardRank, cardKind])
   useEffect(() => {
-    setDice(bootys[id!].dice ?? '')
-    setItem(bootys[id!].item ?? '')
-    setGamel(bootys[id!].gamel ?? 0)
-    if (bootys[id!].cardKind && bootys[id!].cardRank) {
-      setIsCard(true)
-    } else {
-      setIsCard(false)
+    if (!id) {
+      return
     }
-    setCardRank(bootys[id!].cardRank ?? 'B')
-    setCardKind(bootys[id!].cardKind ?? [])
+    setDice(bootys[id].dice ?? '')
+    setItem(bootys[id].item ?? '')
+    setCardRank(bootys[id].cardRank ?? 'B')
+    setGamel(bootys[id].gamel ?? 0)
+    setCardKind(bootys[id].cardKind ?? [])
   }, [props.paramName])
+  useEffect(() => {
+    if (!isCard) {
+      setCardRank('')
+    }
+    if (gamel < 100) {
+      setCardRank('B')
+    } else if (gamel < 1000) {
+      setCardRank('A')
+    } else if (gamel < 10000) {
+      setCardRank('S')
+    } else {
+      setCardRank('SS')
+    }
+  }, [gamel])
   return (
     <TableRow>
       <StyledTableCell style={{ padding: '0', height: 'auto', width: '15%' }}>
@@ -78,12 +90,13 @@ export const BootyItem = (props: BootysProps) => {
           <MultipleSelectCheckmarks formSX={{ width: '100%' }} divStyle={{}} disabled={true} useData={cardKindList} tagName="カード種類" selectData={cardKind} setSelectData={setCardKind} />
         </StyledTableCell>
         <StyledTableCell style={{ padding: '0', height: 'auto', width: '15%' }}>
-          <FormControl fullWidth>
+          {cardRank}
+          {/* <FormControl fullWidth>
             <InputLabel>カードランク</InputLabel>
             <Select fullWidth value={cardRank} onChange={handle}>
               {cardLankList.map((r, id) => <MenuItem key={id} value={r}>{r}</MenuItem>)}
             </Select>
-          </FormControl>
+          </FormControl> */}
         </StyledTableCell></> : <><StyledTableCell style={{ padding: '0', height: 'auto', width: '20%' }}></StyledTableCell><StyledTableCell style={{ padding: '0', height: 'auto', width: '15%' }}></StyledTableCell></>}
     </TableRow>
   )

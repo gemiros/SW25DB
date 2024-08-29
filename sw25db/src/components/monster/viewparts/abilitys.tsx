@@ -15,6 +15,8 @@ export const MonsterViewAbilitys = (props: Props) => {
   useEffect(() => {
     const parts = ["全身"]
     props.abilitys.abilitys ? props.abilitys.abilitys.forEach((ability) => {
+      console.log(ability);
+
       ability.part ? parts.push(...ability.part) : null
     }) : null
     setPartAbilitys(Array.from(new Set(parts)))
@@ -37,16 +39,20 @@ export const MonsterViewAbilitys = (props: Props) => {
         partAbilitys.map((part, id) => <React.Fragment key={id}>
           {partAbilitys.length > 1 ? <h3>{part}</h3> : null}
           {
-            part === '全身' ?
-              props.abilitys.abilitys ?
-                props.abilitys.abilitys
-                  .filter((abi) => !abi.part)
+            part === '全身'
+              // 全身である
+              ? props.abilitys.abilitys
+                // アビリティが存在する
+                ? props.abilitys.abilitys
+                  .filter((abi) => (!abi.part || !abi.part.length))
                   .map((abi, id) => <MonsterViewAbilityItem key={id} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)
                 : null
-              : props.abilitys.abilitys ?
-                props.abilitys.abilitys
-                  .filter((abi) => abi.part ?
-                    abi.part.includes(part)
+              // 全身でない
+              : props.abilitys.abilitys
+                // アビリティが存在する
+                ? props.abilitys.abilitys
+                  .filter((abi) => abi.part
+                    ? abi.part.includes(part)
                     : false)
                   .map((abi, id) => <MonsterViewAbilityItem key={id} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)
                 : null
@@ -66,6 +72,8 @@ type Props2 = {
 }
 
 const MonsterViewAbilityItem = (props: Props2) => {
+  console.log(props.abilitys);
+
   return (
     <div style={{ margin: '1em', padding: '1em', backgroundColor: '#f0f0f0', border: '1px solid #ddd', borderRadius: '1em' }}>
       <h3 style={{ marginBottom: '0em', marginTop: '0em' }}>

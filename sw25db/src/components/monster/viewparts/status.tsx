@@ -22,9 +22,6 @@ export const MonsterViewStatus = (props: Props) => {
     tmp.life = fixedStatus.life ?? tmp.life;
     tmp.mind = fixedStatus.mind ?? tmp.mind;
     tmp.perc = fixedStatus.perc ?? tmp.perc;
-    console.log(tmp.perc);
-    console.log(tmp);
-
 
     tmp.pop = fixedStatus.pop ?? tmp.pop;
     tmp.preem = fixedStatus.preem ?? tmp.preem;

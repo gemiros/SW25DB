@@ -198,7 +198,7 @@ export const foundationTextInit: monster.foundation = {
 };
 
 export const tooInit: monster.top = {
-  race: "",
+  race: "蛮族",
   lv: 0,
   name: "",
   page: "",
@@ -207,16 +207,16 @@ export const tooInit: monster.top = {
 export const statusInit: monster.status = {
   habi: [],
   imp: 0,
-  int: "",
+  int: "なし",
   lang: [],
   life: 0,
   mind: 0,
-  perc: "",
+  perc: "五感",
   pop: 0,
-  reac: "",
-  speed: "",
+  reac: "友好的",
+  speed: "- / -",
   weak: "",
-  weakValue: -1,
+  weakValue: 0,
 };
 
 export const partInit: monster.part = {

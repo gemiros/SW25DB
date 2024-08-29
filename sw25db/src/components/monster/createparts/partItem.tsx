@@ -7,12 +7,6 @@ import { PartsDetailProps } from "./props";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: 'center',
-    // border: '1px #ffffff solid'
-  },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     textAlign: 'center',
@@ -33,6 +27,8 @@ export const PartItem = (props: PartsDetailProps) => {
   const [mp, setMP] = useState<number>(0)
   const [mind, setMind] = useState<number>(0)
   const [life, setLife] = useState<number>(0)
+
+  const [isOne, setIsOne] = useState<boolean>(true)
 
   const changeIsMP = () => {
     setIsMP(!isMP)
@@ -56,11 +52,31 @@ export const PartItem = (props: PartsDetailProps) => {
     tmp.mindRes = race == '騎獣' ? mind : undefined
     const tmp2 = structuredClone(props.levels)
     tmp2[props.levelId].parts[idx] = tmp
-
     props.setLevels(tmp2)
   }
   useEffect(() => {
     changeData()
+    if (isOne) {
+      props.setOneParts(prev => {
+        const newData = structuredClone(prev)
+        if (isOne) {
+          const tmp: monster.part = {
+            core: core,
+            name: name,
+            hit: hit,
+            damage: damage,
+            avoid: avoid,
+            protect: protect,
+            hp: hp,
+            mp: String(mp),
+            lifeRes: life,
+            mindRes: mind
+          }
+          newData[idx] = tmp
+        }
+        return newData
+      })
+    }
   }, [avoid, name, hit, damage, avoid, protect, hp, mp, core, life, mind])
   useEffect(() => {
     setAvoid(part.avoid ?? 0)
@@ -74,10 +90,23 @@ export const PartItem = (props: PartsDetailProps) => {
     setCore(part.core ?? false)
     setLife(part.lifeRes ?? 0)
     setMind(part.mindRes ?? 0)
-  }, [props.paramName])
+  }, [props.paramName, part])
+  useEffect(() => {
+    if (props.levelId !== 0) {
+      setIsOne(false)
+    } else {
+      setIsOne(true)
+    }
+  }, [props.levelId])
+  useEffect(() => {
+    if (isOne) {
+      setName(part.name ?? 0)
+      setCore(part.core ?? false)
+    }
+  }, [props.levels])
   return <TableRow key={idx}>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}><Checkbox checked={core} onChange={changeCore}></Checkbox></StyledTableCell>
-    <StyledTableCell style={{ padding: '0', height: 'auto', width: '19%' }}><StatusInput inputName="攻撃方法" value={name} onChange={handleChange(setName, (v) => v)} /></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}><Checkbox disabled={!isOne} checked={core} onChange={changeCore}></Checkbox></StyledTableCell>
+    <StyledTableCell style={{ padding: '0', height: 'auto', width: '19%' }}><StatusInput disabled={!isOne} inputName="攻撃方法" value={name} onChange={handleChange(setName, (v) => v)} /></StyledTableCell>
     <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="命中力" value={hit} onChange={handleChange(setHit, Number)} /></StyledTableCell>
     <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="打撃点" value={damage} onChange={handleChange(setDamage, Number)} /></StyledTableCell>
     <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}><StatusInput inputName="回避力" value={avoid} onChange={handleChange(setAvoid, Number)} /></StyledTableCell>

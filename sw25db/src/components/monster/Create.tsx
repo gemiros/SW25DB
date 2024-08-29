@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Top } from './createparts/top';
 import { Status } from './createparts/status';
 import { Parts } from './createparts/parts';
@@ -13,13 +13,16 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 type Props = {
   monsters?: monster.monster[]
+  setSnackbarText: (s: string) => void
+  setOpen: (o: boolean) => void
 }
 
 const MonsterCreate = (props: Props) => {
+  const { setSnackbarText, setOpen } = props
   const navigate = useNavigate()
   const { name } = useParams<{ name: string }>()
   const [top, setTop] = useState<monster.top>(structuredClone(tooInit))
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>(['main'])
   const [status, setStatus] = useState<monster.status>(structuredClone(statusInit))
   const [levels, setLevels] = useState<monster.level[]>([])
   const [abilitys, setAbilitys] = useState<monster.abilitys>(structuredClone(abilitysInit))
@@ -30,6 +33,7 @@ const MonsterCreate = (props: Props) => {
   const [statusExpanded, setStatusExpanded] = useState(true);
   const [partNameList, setPartNameList] = useState<string[]>(["全身"])
   const [monsId, setMonsId] = useState<string>('')
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false)
 
   const locate = useLocation()
 
@@ -37,6 +41,7 @@ const MonsterCreate = (props: Props) => {
     setStatusExpanded(!statusExpanded);
   };
   const createMonster = async () => {
+    setButtonDisabled(true)
     const data: monster.monster = {
       id: '',
       Top: top,
@@ -47,11 +52,19 @@ const MonsterCreate = (props: Props) => {
       Tags: tags
     }
     console.log(data);
-    console.log('duplicate')
-    await postData(data)
-    navigate('/')
+    setOpen(true)
+    await postData(data).then(() => {
+      setButtonDisabled(false)
+      setSnackbarText('モンスターデータ作成完了！')
+      navigate('/')
+    }).catch(() => {
+      setButtonDisabled(false)
+      setSnackbarText('モンスターデータ作成失敗！')
+      navigate('/')
+    })
   }
   const editMonster = async () => {
+    setButtonDisabled(true)
     const data: monster.monster = {
       id: monsId,
       Top: top,
@@ -62,9 +75,16 @@ const MonsterCreate = (props: Props) => {
       Tags: tags
     }
     console.log(data);
-    console.log('edit')
-    await editData(data)
-    navigate('/')
+    setOpen(true)
+    await editData(data).then(() => {
+      setButtonDisabled(false)
+      setSnackbarText('モンスターデータ編集完了！')
+      navigate('/')
+    }).catch(() => {
+      setButtonDisabled(false)
+      setSnackbarText('モンスターデータ編集失敗！')
+      navigate('/')
+    })
   }
   useEffect(() => {
     const tmp = structuredClone(levels)
@@ -78,7 +98,6 @@ const MonsterCreate = (props: Props) => {
   useEffect(() => {
     if (props.monsters) {
       const dup = props.monsters.filter((m) => m.Top).find((m) => m.Top.name == name)
-      console.log(dup);
       if (dup) {
         setMonsId(dup.id)
         setTop(dup.Top)
@@ -95,7 +114,7 @@ const MonsterCreate = (props: Props) => {
       } else {
         setMonsId('')
         setTop(structuredClone(tooInit))
-        setTags([])
+        setTags(['main'])
         setStatus(structuredClone(statusInit))
         setLevels([])
         setAbilitys(structuredClone(abilitysInit))
@@ -113,7 +132,7 @@ const MonsterCreate = (props: Props) => {
   }, [])
 
   return (
-    <div>
+    <div style={{ padding: '0' }}>
       <h2>モンスター作成</h2>
       <Top top={top} setTop={setTop} tags={tags} setTags={setTags} paramName={paraName ?? ''} />
       <Accordion expanded={statusExpanded} onChange={toggleStatusAccordion}>
@@ -131,8 +150,8 @@ const MonsterCreate = (props: Props) => {
       <Explanation explanation={explanation} setExplanation={setExplanation} paramName={paraName ?? ''} />
       <Grid justifyContent={'end'} container>
         {isEdit
-          ? <Button style={{ margin: '1em' }} variant='contained' onClick={editMonster}>編集</Button>
-          : <Button style={{ margin: '1em' }} variant='contained' onClick={createMonster}>作成</Button>
+          ? <Button disabled={buttonDisabled} style={{ margin: '1em' }} variant='contained' onClick={editMonster}>編集</Button>
+          : <Button disabled={buttonDisabled} style={{ margin: '1em' }} variant='contained' onClick={createMonster}>作成</Button>
         }
       </Grid>
     </div>
