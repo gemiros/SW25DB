@@ -72,6 +72,7 @@ const MonsterCreate = (props: Props) => {
       Parts: levels,
       Abilitys: abilitys,
       Explanation: explanation,
+      Bootys: bootys,
       Tags: tags
     }
     console.log(data);

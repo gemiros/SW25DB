@@ -46,8 +46,7 @@ export const AbilityItem = (props: Props) => {
   const [explanation, setExplanation] = useState<string>('')
 
   const [isMagic, setIsMagic] = useState<boolean>(false)
-  const [isUse, setIsUse] = useState<boolean>(true)
-  // const [changeFlg, setIsChangeFlg] = useState<boolean>(false)
+  const [isUse, setIsUse] = useState<boolean>(false)
 
   const changeData = () => {
     const tmp = structuredClone(Abilitys)
@@ -65,6 +64,8 @@ export const AbilityItem = (props: Props) => {
       isMagic ? `/${magicValue}(${magicValue + 7})` : ''
     tmp.abilitys[idx].use = tmpUse ?? undefined
     tmp.abilitys[idx].part = partName ?? undefined
+    console.log(explanation);
+
     tmp.abilitys[idx].explain = explanation ?? undefined
     setAbilitys(tmp)
   }
@@ -118,7 +119,7 @@ export const AbilityItem = (props: Props) => {
   }, [isMagic])
   useEffect(() => {
     changeData()
-  }, [item, name, kind, partName, useValue, resistSkill, resistResult])
+  }, [item, name, kind, partName, useValue, resistSkill, resistResult, explanation])
   useEffect(() => {
     setItem(Abilitys.abilitys[idx].item ?? '')
     setName(Abilitys.abilitys[idx].name ?? '')
