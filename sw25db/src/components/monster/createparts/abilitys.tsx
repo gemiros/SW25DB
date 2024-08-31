@@ -1,26 +1,57 @@
-import { useEffect, useState } from "react";
-import { AbilitysProps } from "./props";
 import { StatusInput } from "./foundationStatus";
 import { handleChange } from "../../utilFunc/utilFunc";
 import { Accordion, AccordionDetails, AccordionSummary, Button, Table, TableBody, TableRow, Typography } from "@mui/material";
 import { AbilityItem } from "./abilityItem";
-import { abilityInit } from "../../const/monster";
 import { AddCircle, KeyboardArrowDown, KeyboardArrowUp, RemoveCircle } from "@mui/icons-material";
 import CachedIcon from '@mui/icons-material/Cached';
-import { humanRace } from "../uniqueAbility/human";
+import { UniqueAccordion } from "../viewparts/abilitys";
+import { abilityInit } from "../../const/monster";
+import { useEffect, useState } from "react";
 import { commonFairyUnique, ancientFairyUnique } from "../uniqueAbility/fairy";
 import { familia2Unique, familiaUnique } from "../uniqueAbility/familia";
 import { golemUnique } from "../uniqueAbility/golem";
+import { humanRace } from "../uniqueAbility/human";
 import { magicMonsterUnique } from "../uniqueAbility/magicMonster";
 import { undeadUnique } from "../uniqueAbility/undead";
-import { UniqueAccordion } from "../viewparts/abilitys";
+
+type AbilitysProps = {
+  top: monster.top;
+  partNameList: string[];
+  max: number
+  setMax: React.Dispatch<React.SetStateAction<number>>
+  abilitys: monster.ability[];
+  setAbilitys: React.Dispatch<React.SetStateAction<monster.ability[]>>;
+  paramName: string;
+};
 
 export const Abilitys = (props: AbilitysProps) => {
-  const { partNameList, top, abilitys, setAbilitys } = props;
-  const [max, setMax] = useState<number>(0);
-  const [expanded, setExpanded] = useState(false);
+  const { top, partNameList, max, setMax, abilitys, setAbilitys } = props
   const [unique, setUnique] = useState<monster.ability[] | null>(null);
-  const [changeFlg, setChangeFlg] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState(false);
+
+  const modifyBootys = (modifier: (abilitys: monster.ability[]) => typeof abilitys) => {
+    setAbilitys(modifier([...abilitys]));
+  };
+
+  const abilitysPlus = () => modifyBootys((abilitys) => [...abilitys, abilityInit]);
+  const abilitysMinus = () => modifyBootys((abilitys) => abilitys.slice(0, -1));
+  const allClear = () => { setAbilitys([]) };
+  const moveRow = (index: number, direction: 'up' | 'down') => {
+    const newRows = structuredClone(abilitys)
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
+    if (targetIndex < 0 || targetIndex >= newRows.length) return
+    [newRows[index], newRows[targetIndex]] = [newRows[targetIndex], newRows[index]]
+    setAbilitys(newRows)
+  }
+  const copyRow = (index: number) => {
+    const newRow = structuredClone(abilitys[index])
+    setAbilitys([...abilitys, newRow])
+  }
+  const handleInputChange = (index: number, field: keyof monster.ability, value: any) => {
+    const newRows = structuredClone(abilitys);
+    newRows[index] = { ...newRows[index], [field]: value };
+    setAbilitys(newRows);
+  };
 
   useEffect(() => {
     setUnique(null);
@@ -64,34 +95,6 @@ export const Abilitys = (props: AbilitysProps) => {
     }
   }, [top]);
 
-  const partsPlus = () => {
-    const tmpAbilitys = structuredClone(abilitys);
-    tmpAbilitys.abilitys.push(structuredClone(abilityInit));
-    setAbilitys(tmpAbilitys);
-  };
-
-  const partsMinus = () => {
-    if (abilitys.abilitys.length > 0) {
-      const tmpAbilitys = structuredClone(abilitys);
-      tmpAbilitys.abilitys.pop();
-      setAbilitys(tmpAbilitys);
-    }
-  };
-
-  const allClear = () => {
-    setAbilitys({ abilitys: [] });
-  };
-
-  useEffect(() => {
-    const tmp = structuredClone(abilitys);
-    tmp.max = max > 0 ? max : undefined;
-    setAbilitys(tmp);
-  }, [max, changeFlg]);
-
-  useEffect(() => {
-    setMax(abilitys.max ?? 0);
-  }, [props.paramName]);
-
   return (
     <div style={{ marginTop: '1em' }}>
       <hr />
@@ -107,31 +110,31 @@ export const Abilitys = (props: AbilitysProps) => {
             </AccordionSummary>
             <AccordionDetails>
               {unique.map((item, id) => (
-                <UniqueAccordion key={id} kind={item.kind} name={item.name} explain={item.explain} />
+                <UniqueAccordion key={id} kind={item.kind} name={item.name} explain={item.explain} use={""} />
               ))}
             </AccordionDetails>
           </Accordion>
         )}
       </div>
       <div style={{ paddingBottom: '1em', justifyItems: 'center' }}>
-        <Button variant="contained" onClick={partsPlus}>能力追加<AddCircle /></Button>
-        <Button variant="contained" onClick={partsMinus}>能力削除<RemoveCircle /></Button>
+        <Button variant="contained" onClick={abilitysPlus}>能力追加<AddCircle /></Button>
+        <Button variant="contained" onClick={abilitysMinus}>能力削除<RemoveCircle /></Button>
         <Button variant="contained" onClick={allClear}>クリア<CachedIcon /></Button>
       </div>
       <Table sx={{ border: 'none' }}>
         <TableBody>
-          {abilitys.abilitys.map((_abi, idx) => (
+          {abilitys.map((abi, idx) => (
             <TableRow key={idx}>
               <AbilityItem
+                copyRow={copyRow}
                 paramName={props.paramName}
                 race={top.race}
                 idx={idx}
-                Abilitys={abilitys}
-                setAbilitys={setAbilitys}
                 partNameList={partNameList}
-                changeFlg={changeFlg}
-                setChangeFlg={setChangeFlg}
-              />
+                row={abi}
+                totalRows={abilitys.length}
+                onMoveRow={moveRow}
+                onInputChange={handleInputChange} />
             </TableRow>
           ))}
         </TableBody>

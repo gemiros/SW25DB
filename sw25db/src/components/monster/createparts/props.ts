@@ -57,8 +57,17 @@ export type AbilityDetailProps = {
 
 export type BootysProps = {
   bootys: monster.booty[];
-  setBootys: (b: monster.booty[]) => void;
-  id?: number;
+  setBootys: React.Dispatch<React.SetStateAction<monster.booty[]>>;
+  moveItem: (index: number, direction: "up" | "down") => void;
+  paramName: string;
+};
+
+export type BootyItemProps = {
+  bootys: monster.booty[];
+  setBootys: React.Dispatch<React.SetStateAction<monster.booty[]>>;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  id: number;
   paramName: string;
 };
 

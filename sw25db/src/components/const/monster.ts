@@ -241,10 +241,23 @@ export const abilitysInit: monster.abilitys = {
 export const abilityInit: monster.ability = {
   kind: [],
   name: "",
+  use: "",
+  part: [],
+  useData: {
+    isMagic: false,
+    magic: 0,
+    isUse: false,
+    useValue: 0,
+    resistSkill: undefined,
+    resistResult: undefined,
+  },
 };
 
 export const bootysInit: monster.booty = {
   dice: "",
   item: "",
   gamel: 0,
+  cardKind: [],
+  cardRank: "B",
+  isCard: true,
 };

@@ -50,7 +50,6 @@ export const Status = (props: StatusProps) => {
     setStatus(tmp)
   }, [int, percient, reaction, imp, language, habitat, popular, weakValue, weak, preem, speed, lifeRes, mindRes])
   useEffect(() => {
-    console.log(status);
     setInt(status.int ?? 'なし')
     setPercient(status.perc ?? '五感')
     setReaction(status.reac ?? '友好的')

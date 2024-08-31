@@ -15,8 +15,6 @@ export const MonsterViewAbilitys = (props: Props) => {
   useEffect(() => {
     const parts = ["全身"]
     props.abilitys.abilitys ? props.abilitys.abilitys.forEach((ability) => {
-      console.log(ability);
-
       ability.part ? parts.push(...ability.part) : null
     }) : null
     setPartAbilitys(Array.from(new Set(parts)))
@@ -30,7 +28,7 @@ export const MonsterViewAbilitys = (props: Props) => {
             <Typography variant="h6" style={{ fontWeight: "bold" }}>分類所持特殊能力</Typography>
           </AccordionSummary>
           <AccordionDetails>{props.unique.map((item, id) =>
-            <UniqueAccordion key={id} kind={item.kind} name={item.name} explain={item.explain} />
+            <UniqueAccordion key={id} kind={item.kind} name={item.name} explain={item.explain} use={""} />
           )}
           </AccordionDetails>
         </Accordion> : null
@@ -57,9 +55,9 @@ export const MonsterViewAbilitys = (props: Props) => {
                   .map((abi, id) => <MonsterViewAbilityItem key={id} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)
                 : null
           }
-
         </React.Fragment>)
       }
+      {props.abilitys?.abilitys?.length === 0 ? <h5>なし</h5> : null}
     </div>
   )
 }
@@ -72,8 +70,6 @@ type Props2 = {
 }
 
 const MonsterViewAbilityItem = (props: Props2) => {
-  console.log(props.abilitys);
-
   return (
     <div style={{ margin: '1em', padding: '1em', backgroundColor: '#f0f0f0', border: '1px solid #ddd', borderRadius: '1em' }}>
       <h3 style={{ marginBottom: '0em', marginTop: '0em' }}>
@@ -91,7 +87,14 @@ const MonsterViewAbilityItem = (props: Props2) => {
   )
 }
 
-export const UniqueAccordion = (unique: monster.ability) => {
+type uniqueProps = {
+  kind: string[]
+  name: string
+  use: string
+  explain?: string
+}
+
+export const UniqueAccordion = (unique: uniqueProps) => {
   const [expanded, setExpanded] = useState(false)
   const toggleAccordion = () => {
     setExpanded(!expanded)

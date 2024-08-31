@@ -28,8 +28,6 @@ const MonsterView = (props: Props) => {
   const [hRace, setHRace] = useState<race>(humanRace[0])
   const [fixedStatus, setFixedStatus] = useState<monster.fixedStatus>({})
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-
     if (selectArray.includes(e.target.value)) {
       setSelectArray(
         selectArray.filter((selectedValue) => selectedValue !== e.target.value)

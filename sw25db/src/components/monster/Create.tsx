@@ -3,13 +3,13 @@ import { Top } from './createparts/top';
 import { Status } from './createparts/status';
 import { Parts } from './createparts/parts';
 import { Abilitys } from './createparts/abilitys';
-import { Bootys } from './createparts/bootys';
 import { Explanation } from './createparts/explanation';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Grid, Typography } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import { abilitysInit, statusInit, tooInit } from '../const/monster';
-import { editData, postData } from '../../firebaseConfig';
+import { statusInit, tooInit } from '../const/monster';
+import { editData, getData, postData } from '../../firebaseConfig';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Bootys } from './createparts/bootys';
 
 type Props = {
   monsters?: monster.monster[]
@@ -25,7 +25,8 @@ const MonsterCreate = (props: Props) => {
   const [tags, setTags] = useState<string[]>(['main'])
   const [status, setStatus] = useState<monster.status>(structuredClone(statusInit))
   const [levels, setLevels] = useState<monster.level[]>([])
-  const [abilitys, setAbilitys] = useState<monster.abilitys>(structuredClone(abilitysInit))
+  const [max, setMax] = useState<number>(0)
+  const [abilitys, setAbilitys] = useState<monster.ability[]>([])
   const [bootys, setBootys] = useState<monster.booty[]>([])
   const [explanation, setExplanation] = useState<string>('')
   const [paraName, setParaName] = useState<string>('')
@@ -47,7 +48,10 @@ const MonsterCreate = (props: Props) => {
       Top: top,
       Status: status,
       Parts: levels,
-      Abilitys: abilitys,
+      Abilitys: {
+        max: max,
+        abilitys: abilitys
+      },
       Explanation: explanation,
       Tags: tags
     }
@@ -61,6 +65,8 @@ const MonsterCreate = (props: Props) => {
       setButtonDisabled(false)
       setSnackbarText('モンスターデータ作成失敗！')
       navigate('/')
+    }).finally(() => {
+      getData()
     })
   }
   const editMonster = async () => {
@@ -70,13 +76,15 @@ const MonsterCreate = (props: Props) => {
       Top: top,
       Status: status,
       Parts: levels,
-      Abilitys: abilitys,
+      Abilitys: {
+        max: max,
+        abilitys: abilitys
+      },
       Explanation: explanation,
       Bootys: bootys,
       Tags: tags
     }
     console.log(data);
-    setOpen(true)
     await editData(data).then(() => {
       setButtonDisabled(false)
       setSnackbarText('モンスターデータ編集完了！')
@@ -85,8 +93,12 @@ const MonsterCreate = (props: Props) => {
       setButtonDisabled(false)
       setSnackbarText('モンスターデータ編集失敗！')
       navigate('/')
+    }).finally(() => {
+      setOpen(true)
+      getData()
     })
   }
+
   useEffect(() => {
     const tmp = structuredClone(levels)
     const parts = tmp.length ? tmp[0].parts ? tmp[0].parts.map((part) => part.name) : [] : []
@@ -105,7 +117,8 @@ const MonsterCreate = (props: Props) => {
         setTags(dup.Tags)
         setStatus(dup.Status)
         setLevels(dup.Parts)
-        setAbilitys(dup.Abilitys)
+        setAbilitys(dup.Abilitys.abilitys)
+        setMax(dup.Abilitys.max ?? 0)
         if (dup.Bootys) {
           setBootys(dup.Bootys)
         } else {
@@ -118,7 +131,8 @@ const MonsterCreate = (props: Props) => {
         setTags(['main'])
         setStatus(structuredClone(statusInit))
         setLevels([])
-        setAbilitys(structuredClone(abilitysInit))
+        setAbilitys([])
+        setMax(0)
         setBootys([])
         setExplanation('')
       }
@@ -146,8 +160,8 @@ const MonsterCreate = (props: Props) => {
         </AccordionDetails>
       </Accordion>
       <Parts levels={levels} setLevels={setLevels} race={top.race} lv={top.lv} paramName={paraName ?? ''} />
-      <Abilitys partNameList={partNameList} top={top} abilitys={abilitys} setAbilitys={setAbilitys} paramName={paraName ?? ''} />
-      <Bootys bootys={bootys} setBootys={setBootys} paramName={paraName ?? ''} />
+      <Abilitys top={top} partNameList={partNameList} max={max} setMax={setMax} abilitys={abilitys} setAbilitys={setAbilitys} paramName={paraName} />
+      <Bootys bootys={bootys} setBootys={setBootys} paramName={paraName} />
       <Explanation explanation={explanation} setExplanation={setExplanation} paramName={paraName ?? ''} />
       <Grid justifyContent={'end'} container>
         {isEdit

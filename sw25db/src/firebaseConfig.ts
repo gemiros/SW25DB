@@ -37,6 +37,7 @@ export const getData = async () => {
   }
   if (!monsterData || isReload) {
     console.log("reload");
+    localStorage.clear();
     const res = await loadFirestoreBundle();
     localStorage.setItem("monsterData", JSON.stringify(res));
     localStorage.setItem("cacheDate", now.toISOString());

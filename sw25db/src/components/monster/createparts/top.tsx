@@ -49,7 +49,6 @@ export const Top = (props: TopProps) => {
     setRace(top.race ?? '')
     setPage(top.page ?? '')
     setSubRace(top.subRace ?? '')
-    console.log(tags);
   }, [props.paramName])
   return (<div style={{ padding: '0em', paddingBottom: '1em' }}>
     <div style={{ paddingTop: '1em' }}>

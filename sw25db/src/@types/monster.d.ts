@@ -89,16 +89,22 @@ declare namespace monster {
     parts: Array<part>;
   }
 
+  interface abilitysUseData {
+    isMagic: boolean;
+    magic: number;
+    isUse: boolean;
+    useValue: number;
+    resistSkill?: string;
+    resistResult?: string;
+  }
+
   interface ability {
     kind: Array<string>;
     name: string;
-    use?: string;
-    magic?: number;
-    useValue?: number;
-    resistSkill?: string;
-    resistResult?: string;
+    use: string;
+    useData: abilitysUseData;
     explain?: string;
-    part?: string[];
+    part: string[];
     using?: boolean;
     item?: string;
   }
@@ -112,7 +118,8 @@ declare namespace monster {
     dice: string;
     item: string;
     gamel: number;
-    cardKind?: string[];
-    cardRank?: string;
+    cardKind: string[];
+    cardRank: string;
+    isCard: boolean;
   }
 }

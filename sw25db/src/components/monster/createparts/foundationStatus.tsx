@@ -27,17 +27,19 @@ type Props2 = {
   endAdornment?: null
   readonly?: boolean
   disabled?: boolean
+  type?: string
 }
 
 export const StatusInput = (props: Props2) => {
   const { inputName, value, onChange, style } = props
+  const type = props.type ?? (typeof value == 'number' ? 'number' : 'text')
   return <TextField fullWidth style={style}
     disabled={props.disabled}
     aria-readonly={props.readonly}
     label={inputName}
     value={value}
     onChange={onChange}
-    type={typeof value == 'number' ? 'number' : 'text'}
+    type={type}
     InputProps={{
       inputProps: {
         min: 0
