@@ -88,7 +88,7 @@ const MonsterView = (props: Props) => {
         setUnique(golemUnique)
         break;
       case "妖精":
-        if (mons.Top.subRace! === "通常種") {
+        if (mons.Top.subRace !== "古代種") {
           setUnique(commonFairyUnique)
         } else {
           setUnique(ancientFairyUnique)

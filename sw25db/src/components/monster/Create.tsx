@@ -56,7 +56,6 @@ const MonsterCreate = (props: Props) => {
       Tags: tags
     }
     console.log(data);
-    setOpen(true)
     await postData(data).then(() => {
       setButtonDisabled(false)
       setSnackbarText('モンスターデータ作成完了！')
@@ -66,11 +65,14 @@ const MonsterCreate = (props: Props) => {
       setSnackbarText('モンスターデータ作成失敗！')
       navigate('/')
     }).finally(() => {
+      setOpen(true)
       getData()
     })
   }
   const editMonster = async () => {
     setButtonDisabled(true)
+    console.log(bootys);
+
     const data: monster.monster = {
       id: monsId,
       Top: top,
@@ -161,7 +163,9 @@ const MonsterCreate = (props: Props) => {
       </Accordion>
       <Parts levels={levels} setLevels={setLevels} race={top.race} lv={top.lv} paramName={paraName ?? ''} />
       <Abilitys top={top} partNameList={partNameList} max={max} setMax={setMax} abilitys={abilitys} setAbilitys={setAbilitys} paramName={paraName} />
-      <Bootys bootys={bootys} setBootys={setBootys} paramName={paraName} />
+      {!(top.race == '騎獣' || top.race == '妖精') ?
+        <Bootys bootys={bootys} setBootys={setBootys} paramName={paraName} /> : null
+      }
       <Explanation explanation={explanation} setExplanation={setExplanation} paramName={paraName ?? ''} />
       <Grid justifyContent={'end'} container>
         {isEdit

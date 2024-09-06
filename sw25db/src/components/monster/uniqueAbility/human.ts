@@ -17,7 +17,6 @@ const humanUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "行為判定や打撃点決定で2dを振ったとき、直後にその出目をひっくり返します。この能力は1日に1回だけ使えます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -58,7 +57,6 @@ const elfUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "水中で呼吸、発声ができ、不利な効果を受けません。また、毒・病気属性に対する生命抵抗力・精神抵抗力判定に+2のボーナス修正を得ます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -71,7 +69,6 @@ const elfUnique: monster.ability[] = [
     name: "種族変更／エルフ",
     kind: ["○"],
     explain: "魔力+1",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -111,7 +108,6 @@ const dwarfUnique: monster.ability[] = [
     name: "剣の加護／炎心",
     kind: ["○"],
     explain: "炎属性によるダメージや不利な効果を受けません。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -151,7 +147,6 @@ const tabbitUnique: monster.ability[] = [
     name: "種族変更／タビット",
     kind: ["○"],
     explain: "魔力+2、神聖魔法の使用はできない。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -189,7 +184,6 @@ const runeforkUnique: monster.ability[] = [
     kind: ["▶"],
     explain:
       "任意の値だけHPの現在地を現象させ、同じ値だけ、MPを回復させます。この効果は1日に1回だけ使えます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -203,7 +197,6 @@ const runeforkUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "魔力+2。神聖魔法、妖精魔法、森羅魔法の使用はできない。妖精を知覚できない。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -244,7 +237,6 @@ const nightmareUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "銀の武器に加え、「炎」「水・氷」「土」「風」の任意の1属性（作成時にGMが決定）から受ける物理ダメージ・魔法ダメージが+2点されます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -257,7 +249,6 @@ const nightmareUnique: monster.ability[] = [
     name: "異貌",
     kind: ["○"],
     explain: "その魔物が魔法を使うものの場合、防護点を「+2」します",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -270,7 +261,6 @@ const nightmareUnique: monster.ability[] = [
     name: "種族変更／ナイトメア",
     kind: ["○"],
     explain: "魔力+1",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -310,7 +300,6 @@ const licantUnique: monster.ability[] = [
     name: "獣変貌",
     kind: ["▶"],
     explain: "「知覚：五感（暗視）」となり、打撃点が+2点されます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -324,7 +313,6 @@ const licantUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "リカントのキャラクターは、「▶獣変貌」状態では、神聖魔法、妖精魔法、森羅魔法以外の魔法を行使できません。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -365,7 +353,6 @@ const lildracantUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "10秒（1ラウンド）の間、近接攻撃の命中力・回避力判定に+1のボーナス修正を得ます。この効果は1日に6回（累計6ラウンド）まで使用可能です。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -378,7 +365,6 @@ const lildracantUnique: monster.ability[] = [
     name: "種族変更／リルドラケン",
     kind: ["○"],
     explain: "魔力-1",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -420,7 +406,6 @@ const grassrunnerUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "精神抵抗力判定で対抗する魔法や効果が与えられるとき、すべて「抵抗：消滅」として扱います。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -433,7 +418,6 @@ const grassrunnerUnique: monster.ability[] = [
     name: "種族変更／グラスランナー",
     kind: ["○"],
     explain: "MPを持ちません。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -473,7 +457,6 @@ const meliaUnique: monster.ability[] = [
     name: "種族変更／メリア",
     kind: ["○"],
     explain: "魔力+1",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -509,7 +492,6 @@ const tienceUnique: monster.ability[] = [
     kind: ["▶▶", "△"],
     explain:
       "1分（6ラウンド）の間、隣接エリア（基本戦闘）または10m以内（上級戦闘・熟練戦闘）に存在する「対象：1体全」の命中力・回避力判定に+1のボーナス修正を与えます。この効果は対象が「分類：動物」「分類：幻獣」でなければ現れません。また、6時間ごとに1回だけ使えます",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -550,7 +532,6 @@ const leprechaunUnique: monster.ability[] = [
     kind: ["▶"],
     explain:
       "MPを5点消費して、姿を消します。【コンシール・セルフ】と同様に扱います。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,

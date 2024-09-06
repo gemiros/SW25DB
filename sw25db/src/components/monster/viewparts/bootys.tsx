@@ -35,7 +35,7 @@ export const MonsterViewBootys = (props: Props) => {
           {props.bootys.map((booty, id) => (
             <StyledTableRow key={id}>
               <StyledTableCell sx={{ maxWidth: 100 }} align="left">{booty.dice}</StyledTableCell>
-              <StyledTableCell align="left">{booty.item}{booty.gamel ? `(${booty.gamel}G / ${booty.cardKind?.join('')}${booty.cardRank})` : null}</StyledTableCell>
+              <StyledTableCell align="left">{booty.item}{booty.gamel ? `(${booty.gamel}G / ${booty.isCard ? `${booty.cardKind?.join('')}${booty.cardRank}` : ' - '} )` : null}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

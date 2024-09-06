@@ -23,7 +23,7 @@ export const MonsterViewParts = (props: Props) => {
   }, [props.useLevelId])
   return (
     <React.Fragment>
-      {'lv' in props.parts[0] ?
+      {'lv' in props.parts[0] && props.parts.length > 1 ?
         <FormControl>
           <InputLabel>レベル</InputLabel>
           <Select style={{ width: '10em' }} label="レベル" value={props.useLevelId.toString()} onChange={handleChange}>

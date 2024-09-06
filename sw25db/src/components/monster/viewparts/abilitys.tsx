@@ -9,15 +9,43 @@ type Props = {
   handleChange(e: React.ChangeEvent<HTMLInputElement>): void
 }
 
+type partsAbilitys = {
+  partName: string
+  abilitys: monster.ability[]
+}
+
 export const MonsterViewAbilitys = (props: Props) => {
   const [expanded, setExpanded] = useState(false)
   const [partAbilitys, setPartAbilitys] = useState<string[]>([])
+  const [partsAbilitys, setPartsAbilitys] = useState<partsAbilitys[]>([])
   useEffect(() => {
     const parts = ["全身"]
     props.abilitys.abilitys ? props.abilitys.abilitys.forEach((ability) => {
       ability.part ? parts.push(...ability.part) : null
     }) : null
     setPartAbilitys(Array.from(new Set(parts)))
+
+    console.log(props.abilitys.abilitys);
+    const useParts = Array.from(new Set(parts))
+    if (useParts.length == 1) {
+      setPartsAbilitys([
+        {
+          partName: '1部位',
+          abilitys: props.abilitys.abilitys
+        }
+      ])
+      return
+    }
+    const tmpArray: partsAbilitys[] = []
+    useParts.forEach(p => {
+      const tmp: partsAbilitys = {
+        partName: p,
+        abilitys: props.abilitys.abilitys.filter(a => (p == '全身' && !a.part.length) || a.part.includes(p))
+      }
+      tmpArray.push(tmp)
+    });
+    console.log(tmpArray);
+    setPartsAbilitys(tmpArray)
   }, [props])
 
   return (
@@ -34,6 +62,13 @@ export const MonsterViewAbilitys = (props: Props) => {
         </Accordion> : null
       }
       {
+        partsAbilitys.map((part, id) => <React.Fragment key={id}>
+          {partAbilitys.length > 1 ? <h3>{part.partName}</h3> : null}
+          {part.abilitys.map((abi, idx) =>
+            <MonsterViewAbilityItem key={idx} abilitys={abi} id={id} selectArray={props.selectArray} onChange={props.handleChange} />)}
+        </React.Fragment>)
+      }
+      {/* {
         partAbilitys.map((part, id) => <React.Fragment key={id}>
           {partAbilitys.length > 1 ? <h3>{part}</h3> : null}
           {
@@ -56,7 +91,7 @@ export const MonsterViewAbilitys = (props: Props) => {
                 : null
           }
         </React.Fragment>)
-      }
+      } */}
       {props.abilitys?.abilitys?.length === 0 ? <h5>なし</h5> : null}
     </div>
   )
@@ -80,7 +115,21 @@ const MonsterViewAbilityItem = (props: Props2) => {
             </>)
             : null
         }
-        {props.abilitys.kind.join("")}{props.abilitys.name}{props.abilitys.use}
+        {props.abilitys.kind.join('')}{props.abilitys.name}
+        {
+          !props.abilitys.useData
+            ? null
+            : <>
+              {props.abilitys.useData.isMagic ? `/ 魔力${props.abilitys.useData.magic} (${Number(props.abilitys.useData.magic) + 7})` : null}
+              {props.abilitys.useData.isUse
+                ? <>
+                  /{props.abilitys.useData.useValue} ({Number(props.abilitys.useData.useValue) + 7})
+                  {props.abilitys.useData.resistSkill ? `/${props.abilitys.useData.resistSkill}` : null}
+                  {props.abilitys.useData.resistResult ? `/${props.abilitys.useData.resistResult}` : null}
+                </>
+                : null}
+            </>
+        }
       </h3>
       {props.abilitys.explain || props.abilitys.explain == '' ? props.abilitys.explain : null}
     </div>

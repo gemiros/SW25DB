@@ -59,12 +59,13 @@ export const BootyItem = (props: BootyItemProps) => {
         setRank = 'SS'
       }
       onInputChange(index, 'cardRank', setRank)
-      onInputChange(index, 'isCard', true)
     } else {
       onInputChange(index, 'cardRank', '')
-      onInputChange(index, 'isCard', false)
     }
   }, [row.gamel, isCard])
+  useEffect(() => {
+    onInputChange(index, 'isCard', isCard)
+  }, [isCard])
   return (
     <TableRow>
       <StyledTableCell style={{ padding: '0', width: `${5 * buttonsSpan}%` }}>

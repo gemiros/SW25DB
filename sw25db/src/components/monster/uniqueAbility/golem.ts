@@ -11,7 +11,6 @@ export const golemUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "魔法生物であるゴーレムは、これらの属性のダメージや効果をいっさいうけません。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -25,7 +24,6 @@ export const golemUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "魔法生物であるゴーレムは、【センス・マジック】など、魔力を感知する魔法や効果によって感知されます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -39,7 +37,6 @@ export const golemUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "一部のHPを回復させる効果は、ゴーレムには影響しません。魔法生物のHPを回復させる効果をゴーレムは受けます。",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,
@@ -53,7 +50,6 @@ export const golemUnique: monster.ability[] = [
     kind: ["○"],
     explain:
       "コンジャラー技能を持つものは、ゴーレムに対する魔物知識判定に自動的に成功します。弱点を知るには、セージ技能の習得と本来の達成値が必要です",
-    use: "",
     useData: {
       isMagic: false,
       magic: 0,

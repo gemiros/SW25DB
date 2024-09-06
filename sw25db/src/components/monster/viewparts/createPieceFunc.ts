@@ -1,5 +1,15 @@
 import { foundationTextInit } from "../../const/monster";
+import { commonFairyUnique, ancientFairyUnique } from "../uniqueAbility/fairy";
+import {
+  familiaUniqueStatus1,
+  familia2Unique,
+  familiaUniqueStatus2,
+  familiaUnique,
+} from "../uniqueAbility/familia";
+import { golemUniqueStatus, golemUnique } from "../uniqueAbility/golem";
 import { race } from "../uniqueAbility/human";
+import { magicMonsterUnique } from "../uniqueAbility/magicMonster";
+import { undeadUnique } from "../uniqueAbility/undead";
 type Props = {
   monster: monster.monster;
   levelId: number;
@@ -180,29 +190,83 @@ function commandCreate(props: Props, decision: number) {
       `＝＝＝＝＝部位判定（固定値）＝＝＝＝＝ \n` + partButtleCommandFixedText;
   }
   text += `\n＝＝＝＝＝特殊能力＝＝＝＝＝ \n`;
-  if (props.monster.Top.race === "人族") {
-    let unique: monster.ability[];
-    if (props.monster.Top.lv < 6) {
-      unique = props.hRace.raceUnique1!;
-    } else if (props.monster.Top.lv < 11) {
-      unique = props.hRace.raceUnique6!;
-    } else {
-      unique = props.hRace.raceUnique11!;
-    }
-    unique.forEach((ability) => {
-      if (ability.item != undefined && ability.item != "" && !ability.using) {
-        return;
+  let unique: monster.ability[] = [];
+  switch (props.monster.Top.race) {
+    case "人族":
+      if (props.monster.Top.lv < 6) {
+        unique = props.hRace.raceUnique1!;
+      } else if (props.monster.Top.lv < 11) {
+        unique = props.hRace.raceUnique6!;
+      } else {
+        unique = props.hRace.raceUnique11!;
       }
-      let abilityText = "";
-      abilityText += ability.kind.join("");
-      abilityText += ability.name;
-      abilityText += ability.use ? ability.use : "";
-      abilityText += "|";
-      abilityText += ability.explain ? ability.explain : "";
-      abilityText += "\n";
-      text += abilityText;
-    });
+
+      break;
+    case "魔法生物":
+      unique = magicMonsterUnique;
+      break;
+    case "魔動機":
+      unique = magicMonsterUnique;
+      break;
+    case "アンデッド":
+      unique = undeadUnique;
+      break;
+    case "ゴーレム":
+      unique = golemUnique;
+      break;
+    case "妖精":
+      if (props.monster.Top.subRace! === "通常種") {
+        unique = commonFairyUnique;
+      } else {
+        unique = ancientFairyUnique;
+      }
+      break;
+    case "ファミリア":
+      if (props.monster.Top.lv >= 7) {
+        unique = familia2Unique;
+      } else {
+        unique = familiaUnique;
+      }
+      break;
+    case "騎獣":
+      if (props.monster.Top.subRace) {
+        if (props.monster.Top.subRace == "魔動機") {
+          unique = magicMonsterUnique;
+        }
+      }
+      break;
+    default:
+      break;
   }
+  unique.forEach((ability) => {
+    if (ability.item != undefined && ability.item != "" && !ability.using) {
+      return;
+    }
+    let abilityText = "";
+    abilityText += ability.kind.join("");
+    abilityText += ability.name;
+    if (ability.useData) {
+      const ud = ability.useData;
+      if (ud.isMagic) {
+        abilityText += `魔力${ud.magic}（${Number(ud.magic) + 7}）`;
+      } else if (ud.isUse) {
+        if (ud.resistResult == "必中") {
+          abilityText += "/必中";
+        } else {
+          abilityText += `
+          /${ud.useValue}(${Number(ud.useValue) + 7})
+          ${ud.resistSkill ? `/${ud.resistSkill}` : ""}
+          ${ud.resistResult ? `/${ud.resistResult}` : ""}
+          `;
+        }
+      }
+    }
+    abilityText += "|";
+    abilityText += ability.explain ? ability.explain : "";
+    abilityText += "\n";
+    text += abilityText;
+  });
+
   abilitys.forEach((ability) => {
     if (ability.item != undefined && ability.item != "" && !ability.using) {
       return;
@@ -210,7 +274,22 @@ function commandCreate(props: Props, decision: number) {
     let abilityText = "";
     abilityText += ability.kind.join("");
     abilityText += ability.name;
-    abilityText += ability.use ? ability.use : "";
+    if (ability.useData) {
+      const ud = ability.useData;
+      if (ud.isMagic) {
+        abilityText += `魔力${ud.magic}（${Number(ud.magic) + 7}）`;
+      } else if (ud.isUse) {
+        if (ud.resistResult == "必中") {
+          abilityText += "/必中";
+        } else {
+          abilityText += `
+          /${ud.useValue}(${Number(ud.useValue) + 7})
+          ${ud.resistSkill ? `/${ud.resistSkill}` : ""}
+          ${ud.resistResult ? `/${ud.resistResult}` : ""}
+          `;
+        }
+      }
+    }
     abilityText += "|";
     abilityText += ability.explain ? ability.explain : "";
     abilityText += "\n";

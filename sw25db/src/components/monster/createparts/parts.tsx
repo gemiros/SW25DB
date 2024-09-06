@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { PartsProps } from "./props";
+// import { PartsProps } from "./props";
 import CachedIcon from '@mui/icons-material/Cached';
-import { Button, styled, Table, TableBody, TableCell, tableCellClasses, TableRow } from "@mui/material";
+import { Button, Checkbox, styled, Table, TableBody, TableCell, tableCellClasses, TableHead, TableRow, TextField } from "@mui/material";
 import { levelInit, partInit } from "../../const/monster";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import { PartItem } from "./partItem";
+import { StatusInput } from "./foundationStatus";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  padding: '0', height: 'auto',
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     textAlign: 'center',
@@ -14,93 +16,85 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+export type PartsProps = {
+  levels: monster.level[];
+  setLevels: React.Dispatch<React.SetStateAction<monster.level[]>>;
+  race: string;
+  lv: number;
+  paramName: string;
+};
+
 export const Parts: React.FC<PartsProps> = ({ levels, setLevels, race, lv, paramName }) => {
   const [cores, setCores] = useState<string[]>([]);
-  const [isRider, setIsRider] = useState<boolean>(false);
-  const [oneParts, setOneParts] = useState<monster.part[]>([]);
+  const [isRider, setIsRider] = useState<boolean>(race == '騎獣');
+  // const [oneParts, setOneParts] = useState<monster.part[]>([]);
 
-  const updateLevels = useCallback((updateFn: (levels: monster.level[]) => monster.level[]) => {
-    setLevels(prev => updateFn(structuredClone(prev)));
-  }, [setLevels]);
+  const updateLevels = useCallback(
+    (updateFn: (levels: monster.level[]) => monster.level[]) => {
+      setLevels((prev) => updateFn(structuredClone(prev)));
+    },
+    [setLevels]
+  );
 
   const lvPlus = useCallback(() => {
-    updateLevels(prevLevels => {
-      const newLevel = structuredClone(levelInit);
-      newLevel.lv = lv + prevLevels.length;
-      newLevel.parts = prevLevels.length > 0 ? structuredClone(prevLevels[0].parts) : [structuredClone(partInit)];
+    updateLevels((prevLevels) => {
+      const newLevel: monster.level = {
+        ...structuredClone(levelInit),
+        lv: lv + prevLevels.length,
+        parts: prevLevels.length > 0 ? structuredClone(prevLevels[0].parts) : [structuredClone(partInit)],
+      };
       return [...prevLevels, newLevel];
     });
   }, [lv, updateLevels]);
 
   const lvMinus = useCallback(() => {
-    updateLevels(prevLevels => prevLevels.slice(0, -1));
+    updateLevels((prevLevels) => prevLevels.slice(0, -1));
   }, [updateLevels]);
 
   const partsPlus = useCallback(() => {
-    updateLevels(prevLevels => {
-      if (race === '騎獣') {
-        return prevLevels.map(level => ({
-          ...level,
-          parts: [...level.parts, structuredClone(partInit)]
-        }));
-      } else if (prevLevels.length === 0) {
-        return [{
-          lv,
-          parts: [structuredClone(partInit)]
-        }];
-      } else {
-        return prevLevels.map(level => ({
-          ...level,
-          parts: [...level.parts, structuredClone(partInit)]
-        }));
+    updateLevels((prevLevels) => {
+      const newPart = structuredClone(partInit);
+      if (prevLevels.length === 0) {
+        return [{ lv, parts: [newPart] }];
       }
+      // if (race == '騎獣') {
+      //   return [{ lv, parts: [newPart] }];
+      // }
+      console.log(prevLevels.length);
+      return prevLevels.map((level) => ({
+        ...level,
+        parts: [...level.parts, newPart],
+      }));
     });
   }, [lv, race, updateLevels]);
 
   const partsMinus = useCallback(() => {
-    updateLevels(prevLevels => prevLevels.map(level => ({
-      ...level,
-      parts: level.parts.slice(0, -1)
-    })).filter(level => level.parts.length > 0));
+    updateLevels((prevLevels) =>
+      prevLevels
+        .map((level) => ({
+          ...level,
+          parts: level.parts.slice(0, -1),
+        }))
+        .filter((level) => level.parts.length > 0)
+    );
   }, [updateLevels]);
 
-  const allClear = useCallback(() => {
-    setLevels([]);
-  }, [setLevels]);
+  const allClear = () => setLevels([]);
 
   useEffect(() => {
-    if (levels.length > 0 && levels[0].parts.length > 0) {
-      setCores(levels[0].parts.filter(part => part.core).map(part => part.name));
-      setOneParts(levels[0].parts);
-    } else {
-      setCores([]);
-      setOneParts([]);
-    }
-  }, [levels]);
+    setIsRider(race == '騎獣')
+  }, [race])
+  useEffect(() => {
+    setCores(levels[0] ? levels[0].parts ? levels[0].parts.filter((p) => p.core).map(p => p.name) : [] : [])
+  }, [levels])
 
   useEffect(() => {
-    if (oneParts.length > 0) {
-      updateLevels(prevLevels => prevLevels.map(level => ({
-        ...level,
-        parts: level.parts.map((part, idx) => ({
-          ...part,
-          core: oneParts[idx]?.core ?? part.core,
-          name: oneParts[idx]?.name ?? part.name,
-        }))
-      })));
-    }
-  }, [oneParts, updateLevels]);
-
-  useEffect(() => {
-    setIsRider(race === '騎獣');
-  }, [race]);
-
-  useEffect(() => {
-    updateLevels(prevLevels => prevLevels.map((level, idx) => ({
-      ...level,
-      lv: lv + idx,
-    })));
-  }, [lv, updateLevels]);
+    const tmp = structuredClone(levels)
+    tmp.forEach((l, i) => {
+      l.lv = lv + i
+    });
+    setLevels(tmp)
+  }, [lv])
 
   return (
     <div style={{ marginTop: '1em' }}>
@@ -123,84 +117,142 @@ export const Parts: React.FC<PartsProps> = ({ levels, setLevels, race, lv, param
       <Button variant="contained" style={{ marginBottom: '1em' }} onClick={allClear}>
         クリア<CachedIcon />
       </Button>
-      {isRider ? (
-        <RiderParts
-          oneParts={oneParts}
-          setOneParts={setOneParts}
-          levels={levels}
-          setLevels={setLevels}
-          race={race}
-          paramName={paramName}
-        />
-      ) : (
-        <ElseParts
-          oneParts={oneParts}
-          setOneParts={setOneParts}
-          levels={levels}
-          setLevels={setLevels}
-          race={race}
-          paramName={paramName}
-        />
-      )}
+      <LevelTable levels={levels} setLevels={setLevels} race={race} />
       コア部位：{cores.length ? cores.join('、') : 'なし'}
     </div>
   );
 };
 
-type RiderPartsProps = {
+interface LevelTableProps {
   levels: monster.level[];
   setLevels: React.Dispatch<React.SetStateAction<monster.level[]>>;
-  race: string;
-  paramName: string;
-  oneParts: monster.part[];
-  setOneParts: React.Dispatch<React.SetStateAction<monster.part[]>>;
+  race: string
+}
+
+const LevelTable: React.FC<LevelTableProps> = ({ levels, setLevels, race }) => {
+  const handleCoreNameChange = useCallback(
+    (index: number, updatedPart: Partial<monster.part>) => {
+      const newLevels = structuredClone(levels);
+
+      // levels[0]のparts[index]を更新
+      newLevels[0].parts[index] = { ...newLevels[0].parts[index], ...updatedPart };
+
+      // 他のlevelsにも同様の更新を適用（isCoreとnameのみ）
+      for (let i = 1; i < newLevels.length; i++) {
+        newLevels[i].parts[index].core = newLevels[0].parts[index].core;
+        newLevels[i].parts[index].name = newLevels[0].parts[index].name;
+      }
+
+      setLevels(newLevels);
+    },
+    [levels, setLevels]
+  );
+
+  const handlePartChange = useCallback(
+    (levelIndex: number, partIndex: number, updatedPart: Partial<monster.part>) => {
+      console.log(levelIndex, partIndex, updatedPart);
+
+      const newLevels = structuredClone(levels);
+      newLevels[levelIndex].parts[partIndex] = {
+        ...newLevels[levelIndex].parts[partIndex],
+        ...updatedPart,
+      };
+      console.log(newLevels);
+
+      setLevels(newLevels);
+    },
+    [levels, setLevels]
+  );
+
+  return (
+    <div>
+      {levels.map((level, levelIndex) => (
+        <Table key={`level-${levelIndex}`} style={{ marginBottom: '20px' }}>
+          {levels.length > 1 && (
+            <TableHead>
+              <TableRow>
+                <StyledTableCell colSpan={11}>Lv. {level.lv}</StyledTableCell>
+              </TableRow>
+            </TableHead>
+          )}
+          <TableBody>
+            {level.parts.map((part, partIndex) => (
+              <PartTable
+                key={`part-${partIndex}`}
+                part={part}
+                onCoreNameChange={(updatedPart) => handleCoreNameChange(partIndex, updatedPart)}
+                onPartChange={(updatedPart) => handlePartChange(levelIndex, partIndex, updatedPart)}
+                isEditable={levelIndex === 0}
+                race={race}// levels[0]だけのisCoreとnameを編集可能にする
+              />
+            ))}
+          </TableBody>
+        </Table>
+      ))}
+    </div>
+  );
 };
 
-const RiderParts: React.FC<RiderPartsProps> = ({ levels, oneParts, setOneParts, setLevels, race, paramName }) => (
-  <Table>
-    <TableBody>
-      {levels.map((level, id) => (
-        <React.Fragment key={id}>
-          <TableRow>
-            <StyledTableCell style={{ padding: '0', height: 'auto' }}>Lv.{level.lv}</StyledTableCell>
-          </TableRow>
-          {level.parts.map((part, idx) => (
-            <PartItem
-              key={idx}
-              levelId={id}
-              idx={idx}
-              part={part}
-              levels={levels}
-              setLevels={setLevels}
-              oneParts={oneParts}
-              setOneParts={setOneParts}
-              race={race}
-              paramName={paramName}
-            />
-          ))}
-        </React.Fragment>
-      ))}
-    </TableBody>
-  </Table>
-);
+interface PartTableProps {
+  part: monster.part;
+  onCoreNameChange: (updatedPart: Partial<monster.part>) => void;
+  onPartChange: (updatedPart: Partial<monster.part>) => void;
+  isEditable: boolean;
+  race: string
+}
 
-const ElseParts: React.FC<RiderPartsProps> = ({ levels, oneParts, setOneParts, setLevels, race, paramName }) => (
-  <Table>
-    <TableBody>
-      {levels[0]?.parts.map((part, idx) => (
-        <PartItem
-          key={idx}
-          levelId={0}
-          idx={idx}
-          part={part}
-          levels={levels}
-          setLevels={setLevels}
-          oneParts={oneParts}
-          setOneParts={setOneParts}
-          race={race}
-          paramName={paramName}
+const PartTable = ({ part, onCoreNameChange, onPartChange, isEditable, race }: PartTableProps) => {
+  const [isMP, setIsMP] = useState<boolean>(true)
+  return (
+    <TableRow>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}>
+        <Checkbox
+          disabled={!isEditable}
+          checked={part.core}
+          onChange={(e) => onCoreNameChange({ core: e.target.checked })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '19%' }}>
+        <StatusInput
+          disabled={!isEditable}
+          inputName="攻撃方法" value={part.name}
+          onChange={(e) => onCoreNameChange({ name: e.target.value })}
         />
-      ))}
-    </TableBody>
-  </Table>
-);
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+        <StatusInput inputName="命中力" value={part.hit} onChange={(e) => onPartChange({ hit: Number(e.target.value) })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+        <StatusInput inputName="打撃点" value={part.damage} onChange={(e) => onPartChange({ damage: Number(e.target.value) })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+        <StatusInput inputName="回避力" value={part.avoid} onChange={(e) => onPartChange({ avoid: Number(e.target.value) })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+        <StatusInput inputName="防護点" value={part.protect} onChange={(e) => onPartChange({ protect: Number(e.target.value) })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+        <StatusInput inputName="HP" value={part.hp} onChange={(e) => onPartChange({ hp: Number(e.target.value) })} />
+      </StyledTableCell>
+      <StyledTableCell style={{ padding: '0', height: 'auto', width: '1%' }}>
+        <Checkbox checked={isMP} onChange={() => setIsMP(prev => !prev)} />
+      </StyledTableCell>
+      {isMP ? (
+        <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+          <StatusInput type="number" inputName="MP" value={part.mp ?? 0} onChange={(e) => onPartChange({ mp: e.target.value })} />
+        </StyledTableCell>
+      ) : (
+        <StyledTableCell style={{ border: 'none', padding: '0', height: 'auto', width: '10%' }} />
+      )}
+      {race === '騎獣' && (
+        <>
+          <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+            <StatusInput inputName="生命抵抗" value={part.lifeRes ?? 0} onChange={(e) => onPartChange({ lifeRes: Number(e.target.value) })} />
+          </StyledTableCell>
+          <StyledTableCell style={{ padding: '0', height: 'auto', width: '10%' }}>
+            <StatusInput inputName="精神抵抗" value={part.mindRes ?? 0} onChange={(e) => onPartChange({ mindRes: Number(e.target.value) })} />
+          </StyledTableCell>
+        </>
+      )}
+    </TableRow>
+  );
+}

@@ -15,6 +15,7 @@ export const raceList = [
 ];
 
 export const subRaceList = ["動物", "幻獣", "魔動機"];
+export const subRaceFList = ["通常種", "古代種"];
 
 export const IntList = [
   "なし",
@@ -116,10 +117,12 @@ export const HabitatList = [
   // 自然６
   "湿地",
   "沼",
+  "沼地",
   "池",
   "温泉",
   "湖",
   "湖岸",
+  "湖畔",
   // 自然７
   "海",
   "海岸",
@@ -131,6 +134,7 @@ export const HabitatList = [
   "地下迷宮",
   "浮遊大陸",
   // 人工物
+  "都市",
   "人里",
   "人里近く",
   "墳墓",
@@ -241,7 +245,6 @@ export const abilitysInit: monster.abilitys = {
 export const abilityInit: monster.ability = {
   kind: [],
   name: "",
-  use: "",
   part: [],
   useData: {
     isMagic: false,

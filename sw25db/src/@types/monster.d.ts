@@ -101,7 +101,6 @@ declare namespace monster {
   interface ability {
     kind: Array<string>;
     name: string;
-    use: string;
     useData: abilitysUseData;
     explain?: string;
     part: string[];

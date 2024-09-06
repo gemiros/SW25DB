@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material"
 import { useEffect, useState } from "react"
-import { raceList, subRaceList } from "../../const/monster"
+import { raceList, subRaceFList, subRaceList } from "../../const/monster"
 import { TopProps } from "./props"
 import { handleChange } from "../../utilFunc/utilFunc"
 
@@ -92,6 +92,12 @@ export const Top = (props: TopProps) => {
         <InputLabel>サブ種族</InputLabel>
         <Select style={{ width: '10em' }} label="サブ種族" onChange={handle2} value={subRace}>
           {subRaceList.map((r, id) => <MenuItem key={id} value={r}>{r}</MenuItem>)}
+        </Select>
+      </FormControl> : null}
+      {race == '妖精' ? <FormControl style={{ marginTop: '1em', paddingRight: '1em' }}>
+        <InputLabel>サブ種族</InputLabel>
+        <Select style={{ width: '10em' }} label="サブ種族" onChange={handle2} value={subRace}>
+          {subRaceFList.map((r, id) => <MenuItem key={id} value={r}>{r}</MenuItem>)}
         </Select>
       </FormControl> : null}
     </div>
